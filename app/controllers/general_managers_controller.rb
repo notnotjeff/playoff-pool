@@ -63,8 +63,9 @@ class GeneralManagersController < ApplicationController
     if @gm.save
       flash[:success] = "Team updated!"
       redirect_to user_general_manager_path(@gm)
+    else
+      render 'edit'
     end
-    render 'edit'
   end
 
   private
