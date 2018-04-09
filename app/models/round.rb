@@ -118,6 +118,8 @@ class Round < ApplicationRecord
     doc = JSON.parse(Nokogiri::HTML(open(url)))
     rounds = {}
 
+    return {} if doc["rounds"].nil?
+
     doc["rounds"].each do |round|
       round_number = round["number"].to_i
       round["series"].each do |series|

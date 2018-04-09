@@ -58,7 +58,7 @@ class SkaterGameStatline < ApplicationRecord
   def self.scrape_round(r)
     rounds = Round.get_rounds_hash
     round = Round.find_by(round_number: r)
-    
+
     return "Round needs a start and end date" if round.start_date.nil || round.end_date.nil?
     s_date = round.start_date.strftime("%Y-%m-%d")
     e_date = round.end_date.strftime("%Y-%m-%d")
