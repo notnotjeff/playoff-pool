@@ -1,7 +1,8 @@
 namespace :daily_functions do
   desc "Check if the current round has changed and set accordingly"
   task :set_round => :environment do
-    Round.set_round
+    message = Round.set_round
+    puts message
   end
 
   desc "Scrape the games played on the previous day"
