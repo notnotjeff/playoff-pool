@@ -1,0 +1,76 @@
+<h1>New League</h1>
+<%= form_for(@league) do |f| %>
+  <div class="row">
+    <div class="col-md-6">
+      <%= f.label :name %>
+      <%= f.text_field :name %>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-md-2">
+      <%= f.label :r1_fw_count, "R1 Forward Count" %>
+      <%= f.number_field :r1_fw_count, value: 14 %>
+    </div>
+    <div class="col-md-2">
+      <%= f.label :r1_d_count, "R1 Defensmen Count" %>
+      <%= f.number_field :r1_d_count, value: 6 %>
+    </div>
+    <div class="col-md-2">
+      <%= f.label :r2_g_count, "R1 Goalie Count" %>
+      <%= f.number_field :r1_g_count, value: 1 %>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-md-2">
+      <%= f.label :r2_fw_count, "R2 Forward Count" %>
+      <%= f.number_field :r2_fw_count, value: 10 %>
+    </div>
+    <div class="col-md-2">
+      <%= f.label :r2_d_count, "R2 Defensmen Count" %>
+      <%= f.number_field :r2_d_count, value: 4 %>
+    </div>
+    <div class="col-md-2">
+      <%= f.label :r2_g_count, "R2 Goalie Count" %>
+      <%= f.number_field :r2_g_count, value: 1 %>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-md-2">
+      <%= f.label :r3_fw_count, "R3 Forward Count" %>
+      <%= f.number_field :r3_fw_count, value: 8 %>
+    </div>
+    <div class="col-md-2">
+      <%= f.label :r3_d_count, "R3 Defensmen Count" %>
+      <%= f.number_field :r3_d_count, value: 3 %>
+    </div>
+    <div class="col-md-2">
+      <%= f.label :r3_g_count, "R3 Goalie Count" %>
+      <%= f.number_field :r3_g_count, value: 1 %>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-md-2">
+      <%= f.label :r4_fw_count, "R4 Forward Count" %>
+      <%= f.number_field :r4_fw_count, value: 6 %>
+    </div>
+    <div class="col-md-2">
+      <%= f.label :r4_d_count, "R4 Defensmen Count" %>
+      <%= f.number_field :r4_d_count, value: 3 %>
+    </div>
+    <div class="col-md-2">
+      <%= f.label :r4_g_count, "R4 Goalie Count" %>
+      <%= f.number_field :r4_g_count, value: 1 %>
+    </div>
+  </div>
+  <br>
+  <br>
+  <div class="row">
+    <div class="col-md-2">
+      <%= f.submit %>
+    </div>
+  </div>
+<% end %>

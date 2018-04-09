@@ -1,0 +1,29 @@
+<h1><%= @user.name %> Profile</h1>
+<% if current_user == @user %>
+  <%= link_to "Edit Account Info", edit_user_registration_path %>
+<% end %>
+
+<h3>Enrolled Leagues</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Team Name</th>
+      <th>League</th>
+      <th>Points</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @teams.each do |team| %>
+      <tr>
+        <td><%= link_to team.name, user_general_manager_path(team) %></td>
+        <td><%= link_to team.league.name, league_path(team.league) %></td>
+        <td><%= team.points %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<ul>
+
+</ul>

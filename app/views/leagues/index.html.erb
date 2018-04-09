@@ -1,0 +1,18 @@
+<h1>Leagues</h1>
+<%= link_to "Create League", new_league_path if user_signed_in? %>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Owner</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @leagues.each do |l| %>
+      <tr>
+        <td><%= link_to l.name, league_path(l) %></td>
+        <td><%= l.user.name %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

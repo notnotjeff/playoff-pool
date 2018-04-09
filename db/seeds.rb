@@ -1,0 +1,7 @@
+Skater.scrape_skaters
+Goalie.scrape_goalies
+Round.seed_rounds
+
+Skater.update_all_statlines
+Goalie.update_all_statlines
+Round.reset_league_rounds

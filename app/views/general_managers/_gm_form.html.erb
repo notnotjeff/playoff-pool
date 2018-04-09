@@ -1,0 +1,6 @@
+<%= form_for @gm do |f| %>
+  <%= f.label :user_id %>
+  <%= f.select :user_id, options_for_select(User.all.map { |u| [u.name, u.id] }) %>
+  <%= hidden_field_tag :league_id, @league.id.to_i %>
+  <%= f.submit 'Add User' %>
+<% end %>

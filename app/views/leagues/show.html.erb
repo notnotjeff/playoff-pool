@@ -1,0 +1,39 @@
+<h1><%= @league.name %></h1>
+Owner: <%= @league.user.name %>
+<%= link_to "Destroy League", @league, method: :delete if current_user == @league.user %>
+
+<h3>General Managers</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Rank</th>
+      <th>Manager</th>
+      <th>R1</th>
+      <th>R2</th>
+      <th>R3</th>
+      <th>R4</th>
+      <th>P</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% i = 1 %>
+    <% @gms.each do |gm| %>
+      <tr>
+        <td><%= i %></td>
+        <td><%= link_to gm.name, user_general_manager_path(gm.user_id, gm) %></td>
+        <td><%= gm.r1_points %></td>
+        <td><%= gm.r2_points %></td>
+        <td><%= gm.r3_points %></td>
+        <td><%= gm.r4_points %></td>
+        <td><%= gm.points %></td>
+        <td><%= link_to "X", gm, method: :delete if current_user == @league.user %></td>
+      </tr>
+      <% i += 1 %>
+    <% end %>
+  </tbody>
+</table>
+
+<% if current_user == @league.user %>
+  <h3>Add General Manager</h3>
+  <%= render 'general_managers/gm_form' %>
+<% end %>
