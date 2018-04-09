@@ -5,7 +5,7 @@ class Skater < ApplicationRecord
   require 'open-uri'
 
   def self.scrape_skaters
-    url = "http://www.nhl.com/stats/rest/skaters?isAggregate=false&reportType=basic&isGame=false&reportName=skatersummary&cayenneExp=gameTypeId=3%20and%20seasonId%3E=20162017%20and%20seasonId%3C=20162017"
+    url = "http://www.nhl.com/stats/rest/skaters?isAggregate=false&reportType=basic&isGame=false&reportName=skatersummary&cayenneExp=gameTypeId=3%20and%20seasonId%3E=20172018%20and%20seasonId%3C=20172018"
     skaters = JSON.parse(Nokogiri::HTML(open(url)))
     skaters["data"].each do |skater|
       p = Player.new

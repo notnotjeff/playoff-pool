@@ -2,10 +2,10 @@ class Round < ApplicationRecord
   require 'open-uri'
 
   def self.seed_rounds
-    Round.create!(name: "Round 1", round_number: 1, current_round: false, lineup_changes_allowed: true, round_finished: false, start_date: "12-04-2017".to_date, end_date: "23-04-2017".to_date)
-    Round.create!(name: "Round 2", round_number: 2, current_round: false, lineup_changes_allowed: false, round_finished: false, start_date: "26-04-2017".to_date, end_date: "10-05-2017".to_date)
-    Round.create!(name: "Round 3", round_number: 3, current_round: false, lineup_changes_allowed: false, round_finished: false, start_date: "12-05-2017".to_date, end_date: "25-05-2017".to_date)
-    Round.create!(name: "Round 4", round_number: 4, current_round: false, lineup_changes_allowed: false, round_finished: false, start_date: "31-05-2017".to_date, end_date: "11-06-2017".to_date)
+    Round.create!(name: "Round 1", round_number: 1, current_round: false, lineup_changes_allowed: true, round_finished: false, start_date: "11-04-2018".to_date, end_date: nil)
+    Round.create!(name: "Round 2", round_number: 2, current_round: false, lineup_changes_allowed: false, round_finished: false, start_date: nil, end_date: nil)
+    Round.create!(name: "Round 3", round_number: 3, current_round: false, lineup_changes_allowed: false, round_finished: false, start_date: nil, end_date: nil)
+    Round.create!(name: "Round 4", round_number: 4, current_round: false, lineup_changes_allowed: false, round_finished: false, start_date: nil, end_date: nil)
   end
 
   def self.current_round
@@ -114,7 +114,7 @@ class Round < ApplicationRecord
   end
 
   def self.get_rounds_hash
-    url = "https://statsapi.web.nhl.com/api/v1/tournaments/playoffs?site=en_nhl&expand=round.series,schedule.game.seriesSummary&season=20162017"
+    url = "https://statsapi.web.nhl.com/api/v1/tournaments/playoffs?site=en_nhl&expand=round.series,schedule.game.seriesSummary&season=20172018"
     doc = JSON.parse(Nokogiri::HTML(open(url)))
     rounds = {}
 

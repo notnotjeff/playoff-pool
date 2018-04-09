@@ -1,5 +1,5 @@
 <div class="page-heading">
-  <h1><%= @gm.name %> Roster</h1>
+  <h1><%= link_to @league.name, league_path(@league) %> // <%= @gm.name %> Roster</h1>
   <div class="row">
     <% if current_user == @gm.user %>
       <div class="col-md-2">

@@ -1,5 +1,4 @@
-Skater.scrape_skaters
-Goalie.scrape_goalies
+Player.seed
 Round.seed_rounds
 
 Skater.update_all_statlines
