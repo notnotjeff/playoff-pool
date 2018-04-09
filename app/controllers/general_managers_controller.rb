@@ -7,8 +7,8 @@ class GeneralManagersController < ApplicationController
     @gm.league_id = params[:league_id]
     if @gm.save
       @gm.update_attributes(name: @gm.user.name)
-      redirect_to league_path(League.find(@gm.league_id))
     end
+    redirect_to league_path(League.find(@gm.league_id))
   end
 
   def destroy
