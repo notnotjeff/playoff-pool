@@ -1,28 +1,34 @@
-<h1><%= @gm.name %> Roster</h1>
-<div class="row">
-  <% if current_user == @gm.user %>
-    <div class="col-md-2">
-      <%= link_to "Change Name", edit_user_general_manager_path(@gm) %>
-    </div>
-  <% end %>
-  <div class="col-md-2"><%= link_to "Back To League", league_path(@gm.league) %></div>
+<div class="page-heading">
+  <h1><%= @gm.name %> Roster</h1>
+  <div class="row">
+    <% if current_user == @gm.user %>
+      <div class="col-md-2">
+        <%= link_to "Change Name", edit_user_general_manager_path(@gm) %>
+      </div>
+    <% end %>
+    <div class="col-md-2"><%= link_to "Back To League", league_path(@gm.league) %></div>
+  </div>
 </div>
 
-<ul class="nav nav-tabs" role="tablist" id="roundTab">
-  <li class="nav-item">
-    <a class="nav-link <%= "#{@r1}" %>" id="round-one-tab" data-toggle="tab" href="#round-one" role="tab" aria-controls="round-one" aria-selected="true">Round 1</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link <%= "#{@r2}" %>" id="round-two-tab" data-toggle="tab" href="#round-two" role="tab" aria-controls="round-two" aria-selected="true">Round 2</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link <%= "#{@r3}" %>" id="round-three-tab" data-toggle="tab" href="#round-three" role="tab" aria-controls="round-three" aria-selected="true">Round 3</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link <%= "#{@r4}" %>" id="round-four-tab" data-toggle="tab" href="#round-four" role="tab" aria-controls="round-four" aria-selected="true">Round 4</a>
-  </li>
-</ul>
+<section>
+  <ul class="nav nav-tabs" role="tablist" id="roundTab">
+    <li class="nav-item">
+      <a class="nav-link <%= "#{@r1}" %>" id="round-one-tab" data-toggle="tab" href="#round-one" role="tab" aria-controls="round-one" aria-selected="true">Round 1</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link <%= "#{@r2}" %>" id="round-two-tab" data-toggle="tab" href="#round-two" role="tab" aria-controls="round-two" aria-selected="true">Round 2</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link <%= "#{@r3}" %>" id="round-three-tab" data-toggle="tab" href="#round-three" role="tab" aria-controls="round-three" aria-selected="true">Round 3</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link <%= "#{@r4}" %>" id="round-four-tab" data-toggle="tab" href="#round-four" role="tab" aria-controls="round-four" aria-selected="true">Round 4</a>
+    </li>
+  </ul>
+</section>
 
-<div id="roster-container">
-  <%= render 'roster_container' %>
-</div>
+<section>
+  <div id="roster-container">
+    <%= render 'roster_container' %>
+  </div>
+</section>

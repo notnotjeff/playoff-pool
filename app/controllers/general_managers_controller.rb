@@ -6,6 +6,7 @@ class GeneralManagersController < ApplicationController
     @gm = GeneralManager.new(general_manager_params)
     @gm.league_id = params[:league_id]
     if @gm.save
+      flash[:success] = "Team added!"
       @gm.update_attributes(name: @gm.user.name)
     end
     redirect_to league_path(League.find(@gm.league_id))
@@ -13,6 +14,7 @@ class GeneralManagersController < ApplicationController
 
   def destroy
     @gm = GeneralManager.find(params[:id])
+    flash[:success] = "Team deleted!"
     @gm.destroy
     redirect_to root_url
   end
@@ -59,8 +61,10 @@ class GeneralManagersController < ApplicationController
     @gm = GeneralManager.find(params[:id])
     @gm.update_attributes(general_manager_params)
     if @gm.save
+      flash[:success] = "Team updated!"
       redirect_to user_general_manager_path(@gm)
     end
+    render 'edit'
   end
 
   private

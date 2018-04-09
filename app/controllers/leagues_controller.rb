@@ -5,7 +5,7 @@ class LeaguesController < ApplicationController
   before_action :correct_user, only: :destroy
 
   def index
-    @leagues = League.all
+    @leagues = League.all.order(name: :asc)
   end
 
   def show

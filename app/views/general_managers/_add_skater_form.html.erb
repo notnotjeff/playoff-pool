@@ -1,5 +1,4 @@
 <section class="add-player">
-  <h2>Add Round <%= round %> Skater</h2>
   <% if current_user == @gm.user %>
     <%= form_for @gm.roster_players.build, remote: true do |f| %>
       <%= f.select :player_id, options_for_select(@gm.player_pool.map { |p| ["#{p.last_name}, #{p.first_name} (#{p.position})", p.id] }) %>

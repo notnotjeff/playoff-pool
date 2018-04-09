@@ -14,6 +14,7 @@ class RosterPlayersController < ApplicationController
 
   def destroy
     p = RosterPlayer.find(params[:id])
+    round = p.round
     gm = GeneralManager.find(p.general_manager_id)
     p.destroy if !current_user.teams.find_by(id: gm.id).nil?
 
