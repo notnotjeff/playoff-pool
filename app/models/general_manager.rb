@@ -6,7 +6,7 @@ class GeneralManager < ApplicationRecord
 
   validates :league_id, uniqueness: { scope: [:user_id], message: 'User is already in this league' }
   validates :name, length: { maximum: 50 }
-  before_save :has_not_started
+  before_create :has_not_started
 
   def player_pool
     player_ids = RosterPlayer.where(general_manager_id: self.id).pluck(:player_id)
