@@ -5,6 +5,7 @@ class GeneralManager < ApplicationRecord
   has_many :players, :through => :roster_players
 
   validates :league_id, uniqueness: { scope: [:user_id], message: 'User is already in this league' }
+  validates :name, length: { maximum: 50 }
 
   def player_pool
     player_ids = RosterPlayer.where(general_manager_id: self.id).pluck(:player_id)
