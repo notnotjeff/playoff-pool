@@ -13,14 +13,7 @@ class Round < ApplicationRecord
 
     if !r
       return 0
-    elsif r.start_date && r.start_date <= Time.now
-      return r.round_number
-    elsif r.round_number == 1
-      return 0
-    elsif !r.nil?
-      return r.round_number
     else
-      r = Round.where(round_finished: true).order(round_number: :asc).last
       return r.round_number
     end
   end
