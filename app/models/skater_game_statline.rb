@@ -21,6 +21,7 @@ class SkaterGameStatline < ApplicationRecord
 
   def self.scrape_todays_games(date)
     rounds = Round.get_rounds_hash
+    time = Time.now
 
     games_url = "http://www.nhl.com/stats/rest/skaters?isAggregate=false&reportType=basic&isGame=true&reportName=skatersummary&cayenneExp=gameDate%3E=%22#{date}%22%20and%20gameDate%3C=%22#{date}%2023:59:59%22%20and%20gameTypeId=3"
     games = JSON.parse(Nokogiri::HTML(open(games_url)))
@@ -29,7 +30,7 @@ class SkaterGameStatline < ApplicationRecord
       SkaterGameStatline.scrape_game(game, round_number)
     end
 
-    SkaterGameStatline.where(game_date: date.to_date).each do |sk|
+    SkaterGameStatline.all.where('created_at >= ?', time).each do |sk|
       sk.skater.update_statline
     end
   end
@@ -50,6 +51,7 @@ class SkaterGameStatline < ApplicationRecord
                           assists: game["assists"],
                           points: game["points"],
                           game_winning_goals: game["gameWinningGoals"],
+                          ot_goals: game["otGoals"],
                           round: round_number
                         )
     sgs.save

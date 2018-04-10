@@ -5,7 +5,7 @@ class Skater < ApplicationRecord
   require 'open-uri'
 
   def self.scrape_skaters
-    url = "http://www.nhl.com/stats/rest/skaters?isAggregate=false&reportType=basic&isGame=false&reportName=skatersummary&cayenneExp=gameTypeId=3%20and%20seasonId%3E=20172018%20and%20seasonId%3C=20172018"
+    url = "http://www.nhl.com/stats/rest/skaters?isAggregate=false&reportType=basic&isGame=false&reportName=skatersummary&cayenneExp=gameTypeId=3%20and%20seasonId%3E=20162017%20and%20seasonId%3C=20162017"
     skaters = JSON.parse(Nokogiri::HTML(open(url)))
     skaters["data"].each do |skater|
       p = Player.new
@@ -41,25 +41,29 @@ class Skater < ApplicationRecord
     r1_assists = r1.sum(:assists)
     r1_points = r1.sum(:points)
     r1_game_winning_goals = r1.sum(:game_winning_goals)
-    r1_total = r1_points + r1_game_winning_goals
+    r1_ot_goals = r1.sum(:ot_goals)
+    r1_total = r1_points + r1_ot_goals
 
     r2_goals = r2.sum(:goals)
     r2_assists = r2.sum(:assists)
     r2_points = r2.sum(:points)
     r2_game_winning_goals = r2.sum(:game_winning_goals)
-    r2_total = r2_points + r2_game_winning_goals
+    r2_ot_goals = r2.sum(:ot_goals)
+    r2_total = r2_points + r2_ot_goals
 
     r3_goals = r3.sum(:goals)
     r3_assists = r3.sum(:assists)
     r3_points = r3.sum(:points)
     r3_game_winning_goals = r3.sum(:game_winning_goals)
-    r3_total = r3_points + r3_game_winning_goals
+    r3_ot_goals = r3.sum(:ot_goals)
+    r3_total = r3_points + r3_ot_goals
 
     r4_goals = r4.sum(:goals)
     r4_assists = r4.sum(:assists)
     r4_points = r4.sum(:points)
     r4_game_winning_goals = r4.sum(:game_winning_goals)
-    r4_total = r4_points + r4_game_winning_goals
+    r4_ot_goals = r4.sum(:ot_goals)
+    r4_total = r4_points + r4_ot_goals
 
     if r4.count > 0
       latest_round = 4
@@ -75,18 +79,22 @@ class Skater < ApplicationRecord
                             r1_assists: r1_assists,
                             r1_points: r1_points,
                             r1_game_winning_goals: r1_game_winning_goals,
+                            r1_ot_goals: r1_ot_goals,
                             r2_goals: r2_goals,
                             r2_assists: r2_assists,
                             r2_points: r2_points,
                             r2_game_winning_goals: r2_game_winning_goals,
+                            r2_ot_goals: r2_ot_goals,
                             r3_goals: r3_goals,
                             r3_assists: r3_assists,
                             r3_points: r3_points,
                             r3_game_winning_goals: r3_game_winning_goals,
+                            r3_ot_goals: r3_ot_goals,
                             r4_goals: r4_goals,
                             r4_assists: r4_assists,
                             r4_points: r4_points,
                             r4_game_winning_goals: r4_game_winning_goals,
+                            r4_ot_goals: r4_ot_goals,
                             r1_total: r1_total,
                             r2_total: r2_total,
                             r3_total: r3_total,

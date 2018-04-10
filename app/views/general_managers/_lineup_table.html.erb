@@ -14,6 +14,10 @@
 
     <h3>Goalies (<%= goalies.count %>/<%= @league["r#{round}_g_count".to_sym] %>)</h3>
     <%= render 'goalies_table', goalies: goalies, round: round %>
+    <section>
+      <h3>Round Points (<%= @gm["r#{round}_points"] || 0 %>)</h3>
+      <h3>Total Points (<%= @gm.points || 0 %>)</h3>
+    </section>
   <% else %>
     <div class="round-message">
       Round hasn't started yet

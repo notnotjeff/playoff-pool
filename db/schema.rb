@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180407044151) do
+ActiveRecord::Schema.define(version: 20180410014711) do
 
   create_table "general_managers", force: :cascade do |t|
     t.string "name"
@@ -147,6 +147,7 @@ ActiveRecord::Schema.define(version: 20180407044151) do
     t.datetime "updated_at", null: false
     t.date "game_date"
     t.integer "game_id"
+    t.integer "ot_goals"
     t.index ["skater_id", "round"], name: "index_skater_game_statlines_on_skater_id_and_round"
   end
 
@@ -184,6 +185,10 @@ ActiveRecord::Schema.define(version: 20180407044151) do
     t.integer "r2_total"
     t.integer "r3_total"
     t.integer "r4_total"
+    t.integer "r1_ot_goals"
+    t.integer "r2_ot_goals"
+    t.integer "r3_ot_goals"
+    t.integer "r4_ot_goals"
   end
 
   create_table "users", force: :cascade do |t|
