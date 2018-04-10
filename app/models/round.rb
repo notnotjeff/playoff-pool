@@ -77,9 +77,9 @@ class Round < ApplicationRecord
     if Round.current_round != current_round && Round.all.order(round_number: :asc).first.start_date <= Time.now
       Round.change_round(current_round)
       return "Changed round to #{current_round}"
-    elsif Round.find_by(round_number: 1).start_date <= Time.now
-      Round.change_round(1)
-      return "Started the 1st round!"
+    elsif Round.find_by(round_number: current_round).start_date && Round.find_by(round_number: current_round).start_date <= Time.now
+      Round.change_round(current_round)
+      return "Changed round to #{current_round}"
     end
     return "Round has not changed, it is still round #{current_round}"
   end
