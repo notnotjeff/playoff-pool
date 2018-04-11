@@ -4,7 +4,7 @@ class GeneralManagersController < ApplicationController
 
   def create
     @gm = GeneralManager.new(general_manager_params)
-    @gm.league_id = params[:league_id]
+    @gm.league_id = params[:league_id].to_i
     if @gm.save
       flash[:success] = "Team added!"
       @gm.update_attributes(name: @gm.user.name)
@@ -14,9 +14,10 @@ class GeneralManagersController < ApplicationController
 
   def destroy
     @gm = GeneralManager.find(params[:id])
+    league = @gm.league
     flash[:success] = "Team deleted!"
     @gm.destroy
-    redirect_to root_url
+    redirect_to league_path(league)
   end
 
   def show
