@@ -119,6 +119,7 @@ class Round < ApplicationRecord
     doc["rounds"].each do |round|
       round_number = round["number"].to_i
       round["series"].each do |series|
+        next if series["names"]["teamAbbreviationA"] == "" || series["names"]["teamAbbreviationB"] == ""
         # If team doesn't exist in rounds then add it
         rounds[series["names"]["teamAbbreviationA"].to_sym] ||= {}
         rounds[series["names"]["teamAbbreviationB"].to_sym] ||= {}
