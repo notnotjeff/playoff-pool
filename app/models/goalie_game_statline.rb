@@ -27,10 +27,19 @@ class GoalieGameStatline < ApplicationRecord
     games = JSON.parse(Nokogiri::HTML(open(games_url)))
     games["data"].each do |game|
       round_number = rounds[game["teamAbbrev"].to_sym][game["opponentTeamAbbrev"].to_sym].to_i
-      GoalieGameStatline.scrape_game(game, round_number)
+      ggs = GoalieGameStatline.find_by(game_id: game["gameId"].to_i, skater_id: game["playerId"].to_i)
+
+      if ggs.nil?
+        GoalieGameStatline.scrape_game(game, round_number)
+      else
+        ggs.update_attributes(win: game["wins"],
+                              shutout: game["shutouts"]
+                            )
+        ggs.save
+      end
     end
 
-    GoalieGameStatline.all.where('created_at >= ?', time).each do |go|
+    GoalieGameStatline.all.where('created_at >= ?', date.to_date).each do |go|
       go.goalie.update_statline
     end
   end
