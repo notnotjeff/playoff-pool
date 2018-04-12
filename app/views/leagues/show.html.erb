@@ -37,7 +37,7 @@
   </table>
 </section>
 
-<% if current_user == @league.user %>
+<% if current_user == @league.user && Round.current_round < 1 %>
   <section>
     <h3>Add General Manager</h3>
     <%= render 'general_managers/gm_form' %>
