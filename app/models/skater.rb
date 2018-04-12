@@ -3,6 +3,7 @@ class Skater < ApplicationRecord
   has_many :games,  foreign_key: :skater_id,
                     class_name: "SkaterGameStatline"
   require 'open-uri'
+  validates :id, uniqueness: true
 
   def self.scrape_skaters
     url = "http://www.nhl.com/stats/rest/skaters?isAggregate=false&reportType=basic&isGame=false&reportName=skatersummary&cayenneExp=gameTypeId=3%20and%20seasonId%3E=20162017%20and%20seasonId%3C=20162017"
