@@ -8,6 +8,7 @@ namespace :daily_functions do
   desc "Scrape the games played on the previous day"
   task :scrape => :environment do
     date = 12.hours.ago.to_datetime
+    Player.seed #make sure all players exist so new callups don't break everything
     puts "Starting Daily Scrape for #{date.strftime("%m-%d-%y")}..."
     SkaterGameStatline.scrape_todays_games("#{date.strftime("%Y-%m-%d")}")
     GoalieGameStatline.scrape_todays_games("#{date.strftime("%Y-%m-%d")}")
