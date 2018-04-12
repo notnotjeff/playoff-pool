@@ -38,6 +38,8 @@ class Player < ApplicationRecord
     doc["teams"].each do |t|
       team = t["abbreviation"]
       t["roster"]["roster"].each do |player|
+        next if !Player.find(player["person"]["id"].to_i).nil? || !Skater.find(player["person"]["id"].to_i).nil? || !Goalie.find(player["person"]["id"].to_i).nil?
+
         p = Player.new
         p.update_attributes(id: player["person"]["id"].to_i,
                             skater_id: player["person"]["id"].to_i,
