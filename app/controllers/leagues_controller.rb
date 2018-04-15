@@ -43,15 +43,13 @@ class LeaguesController < ApplicationController
     if @round.to_i.between?(1,4)
       @skaters = RosterPlayer.where(league_id: @league, round: @round, position: @position)
                               .order(round_total: :desc)
-                              .select(:player_id, :round, :round_total)
-                              .group(:player_id)
+                              .select(:id, :player_id, :round, :round_total)
     else
       round_count = Round.current_round
       (1..round_count).each do |round|
         new_skaters = RosterPlayer.where(league_id: @league, position: @position)
                                   .order(round_total: :desc)
-                                  .select(:player_id, :round, :round_total)
-                                  .group(:player_id)
+                                  .select(:id, :player_id, :round, :round_total)
         @skaters = @skaters.nil? ? @skaters = new_skaters : @skaters.merge(new_skaters)
       end
     end
