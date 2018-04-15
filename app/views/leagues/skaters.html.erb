@@ -19,7 +19,7 @@
     <% if @skaters %>
       <% ids = [] %>
       <% @skaters.each do |skater| %>
-        <% next if ids.include? skater.player_id %>
+        <% next if ids.include? "#{skater.player_id}#{skater.round}" %>
         <tr>
           <td><%= skater.player.statline.full_name %></td>
           <td><%= skater.player.position %></td>
@@ -30,7 +30,7 @@
           <td><%= skater.player.statline["r#{skater.round}_ot_goals".to_sym] %></td>
           <td><%= skater.player.statline["r#{skater.round}_total".to_sym] %></td>
         </tr>
-        <% ids << skater.player_id %>
+        <% ids << "#{skater.player_id}#{skater.round}"  %>
       <% end %>
     <% end %>
   </tbody>
