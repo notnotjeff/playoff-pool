@@ -1,7 +1,10 @@
 <div class="page-heading">
   <h1><%= @league.name %></h1>
   Owner: <%= @league.user.name %>
-  <%= link_to "Destroy League", @league, method: :delete, data: { confirm: "Are you sure? This is not reversible" } if current_user == @league.user %>
+  <div class="league-links">
+    <%= link_to "Skater Stats", skaters_league_path(@league) %>
+    <%= link_to "Destroy League", @league, method: :delete, data: { confirm: "Are you sure? This is not reversible" } if current_user == @league.user %>
+  </div>
 </div>
 
 <section>

@@ -1,0 +1,32 @@
+<h1><%= @league.name %> Skater Standings</h1>
+<%= link_to "Back to League", @league %>
+<%= render 'player_filter' %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>POS</th>
+      <th>Round</th>
+      <th>G</th>
+      <th>A</th>
+      <th>P</th>
+      <th>OTG</th>
+      <th>Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @skaters.each do |skater| %>
+      <tr>
+        <td><%= skater.player.statline.full_name %></td>
+        <td><%= skater.player.position %></td>
+        <td><%= skater.round %></td>
+        <td><%= skater.player.statline["r#{skater.round}_goals".to_sym] %></td>
+        <td><%= skater.player.statline["r#{skater.round}_assists".to_sym] %></td>
+        <td><%= skater.player.statline["r#{skater.round}_points".to_sym] %></td>
+        <td><%= skater.player.statline["r#{skater.round}_ot_goals".to_sym] %></td>
+        <td><%= skater.player.statline["r#{skater.round}_total".to_sym] %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

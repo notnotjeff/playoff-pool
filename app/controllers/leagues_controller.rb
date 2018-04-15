@@ -35,6 +35,27 @@ class LeaguesController < ApplicationController
     redirect_to root_url
   end
 
+  def skaters
+    @round = set_round(params[:round].to_s)
+    @position = set_position(params[:position].to_s)
+    @league = League.find(params[:id].to_i)
+
+    if @round.to_i.between?(1,4)
+      @skaters = RosterPlayer.where(league_id: @league, round: @round, position: @position).select(:id, :player_id, :round, :round_total)
+                              .order(round_total: :desc)
+                              .distinct
+                              .joins("INNER JOIN skaters ON skaters.id = roster_players.player_id")
+    else
+      round_count = Round.current_round
+      (1..round_count).each do |round|
+        new_skaters = RosterPlayer.where(league_id: @league, position: @position).select(:id, :player_id, :round, :round_total)
+                                  .order(round_total: :desc)
+                                  .joins("INNER JOIN skaters ON skaters.id = roster_players.player_id")
+        @skaters = @skaters.nil? ? @skaters = new_skaters : @skaters.merge(new_skaters)
+      end
+    end
+  end
+
   private
 
     def league_params
@@ -44,5 +65,15 @@ class LeaguesController < ApplicationController
     def correct_user
       @league = current_user.leagues.find_by(id: params[:id])
       redirect_to root_url if @league.nil?
+    end
+
+    def set_round(round)
+      return Round.current_round.to_i if round = ""
+      return round.to_i.between?(0, 4) ? round : Round.current_round
+    end
+
+    def set_position(position)
+      return ["F", "D"] if position == "Any" || position == ""
+      return position == "F" || position == "D" ? position : "F"
     end
 end
