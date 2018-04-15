@@ -43,6 +43,7 @@ class Scraper < ApplicationRecord
         points = goals + assists
 
         sgs.update_attributes(goals: goals, assists: assists, points: points)
+        sgs.skater.update_statline
       end
     end
   end
