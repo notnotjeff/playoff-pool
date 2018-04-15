@@ -67,7 +67,7 @@ class LeaguesController < ApplicationController
     end
 
     def set_round(round)
-      return Round.current_round.to_i if round = ""
+      return Round.current_round.to_i if round == ""
       return round.to_i.between?(0, 4) ? round : Round.current_round
     end
 
