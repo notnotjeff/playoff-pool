@@ -1,6 +1,6 @@
 class Scraper < ApplicationRecord
   require 'open-uri'
-  
+
   def self.update_day_of_games(date) #YYYY-MM-DD
     schedule_url = "https://statsapi.web.nhl.com/api/v1/schedule?startDate=#{date}&endDate=#{date}"
     sched_doc = JSON.parse(Nokogiri::HTML(open(schedule_url)))
@@ -27,6 +27,7 @@ class Scraper < ApplicationRecord
 
     SkaterGameStatline.scrape_todays_games(date, round_hash)
     GoalieGameStatline.scrape_todays_games(date, round_hash)
+    GeneralManager.update_round(Round.current_round)
   end
 
   def self.update_team(players, team, opposition, round, date, game)

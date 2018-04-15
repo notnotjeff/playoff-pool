@@ -56,6 +56,7 @@ class GoalieGameStatline < ApplicationRecord
                           shutout: game["shutouts"],
                           round: round_number
                         )
+    ggs.goalie.update_statline
     ggs.save
   end
 
