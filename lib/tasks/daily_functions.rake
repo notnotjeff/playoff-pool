@@ -7,12 +7,17 @@ namespace :daily_functions do
 
   desc "Scrape the games played on the previous day"
   task :scrape => :environment do
-    date = 12.hours.ago.to_datetime
-    Player.seed #make sure all players exist so new callups don't break everything
+    if Time.now < "11:00:00".to_time # In Heroku's timezone, its 7AM EST
+      date = 12.hours.ago.to_datetime
+    else
+      date = Time.now.to_datetime
+    end
+    rounds = Round.get_rounds_hash
+
+    Player.seed # Make sure all players exist so new callups don't break everything
+
     puts "Starting Daily Scrape for #{date.strftime("%m-%d-%y")}..."
-    SkaterGameStatline.scrape_todays_games("#{date.strftime("%Y-%m-%d")}")
-    GoalieGameStatline.scrape_todays_games("#{date.strftime("%Y-%m-%d")}")
-    GeneralManager.update_round(Round.current_round) if Round.current_round > 0
+    Scraper.update_day_of_games("#{date.strftime("%Y-%m-%d")}")
     puts "Ending Daily Scrape for #{date.strftime("%m-%d-%y")}"
   end
 end

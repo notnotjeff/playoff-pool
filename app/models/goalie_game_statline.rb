@@ -19,8 +19,7 @@ class GoalieGameStatline < ApplicationRecord
     end
   end
 
-  def self.scrape_todays_games(date)
-    rounds = Round.get_rounds_hash
+  def self.scrape_todays_games(date, rounds)
     time = Time.now
 
     games_url = "http://www.nhl.com/stats/rest/goalies?isAggregate=false&reportType=basic&isGame=true&reportName=goaliesummary&cayenneExp=gameDate%3E=%22#{date}%22%20and%20gameDate%3C=%22#{date}%2023:59:59%22%20and%20gameTypeId=3"
@@ -35,12 +34,9 @@ class GoalieGameStatline < ApplicationRecord
         ggs.update_attributes(win: game["wins"],
                               shutout: game["shutouts"]
                             )
+        ggs.goalie.update_statline
         ggs.save
       end
-    end
-
-    GoalieGameStatline.all.where('created_at >= ?', date.to_date).each do |go|
-      go.goalie.update_statline
     end
   end
 

@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   devise_for :users
 
   root 'static_pages#home'
+  get '/updater', to: 'static_pages#updater'
 
   resources :users do
     resources :rosters
