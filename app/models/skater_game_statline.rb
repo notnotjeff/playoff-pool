@@ -46,6 +46,18 @@ class SkaterGameStatline < ApplicationRecord
 
   def self.scrape_game(game, round_number)
     sgs = SkaterGameStatline.new
+    Skater.find_or_create_by(id: game["playerId"].to_i,
+                              first_name: game["playerFirstName"],
+                              last_name: game["playerLastName"],
+                              position: game["playerPositionCode"],
+                              team: game["teamAbbrev"])
+    Player.find_or_create_by(id: game["playerId"].to_i,
+                              skater_id: game["playerId"].to_i,
+                              first_name: game["playerFirstName"],
+                              last_name: game["playerLastName"],
+                              position: game["playerPositionCode"],
+                              team: game["teamAbbrev"],
+                              rounds: round_number)
 
     sgs.update_attributes(skater_id: game["playerId"].to_i,
                           position: game["playerPositionCode"],

@@ -20,8 +20,8 @@ class Scraper < ApplicationRecord
       round = round_hash[home_team.to_sym][away_team.to_sym]
 
       if status != "Final"
-        Scraper.update_team(game_doc["liveData"]["boxscore"]["teams"]["away"]["players"], away_team, home_team, round, date, game)
-        Scraper.update_team(game_doc["liveData"]["boxscore"]["teams"]["home"]["players"], home_team, away_team, round, date, game)
+        Scraper.update_team(game_doc["liveData"]["boxscore"]["teams"]["away"]["players"], game_doc["gameData"]["players"], away_team, home_team, round, date, game)
+        Scraper.update_team(game_doc["liveData"]["boxscore"]["teams"]["home"]["players"], game_doc["gameData"]["players"], home_team, away_team, round, date, game)
       end
     end
 
@@ -30,14 +30,16 @@ class Scraper < ApplicationRecord
     GeneralManager.update_round(Round.current_round)
   end
 
-  def self.update_team(players, team, opposition, round, date, game)
+  def self.update_team(players, game_rosters, team, opposition, round, date, game)
     players.each do |player|
-      profile = Player.find_by(skater_id: player[1]["person"]["id"].to_i)
+      player_id = player[1]["person"]["id"].to_i
+      profile = Player.find_or_create_by(id: player_id, skater_id: player_id, team: team, first_name: game_rosters["ID#{player_id}"]["firstName"], last_name: game_rosters["ID#{player_id}"]["lastName"], position: game_rosters["ID#{player_id}"]["primaryPosition"]["code"], rounds: round)
+      Skater.find_or_create_by(id: player_id, team: team, first_name: game_rosters["ID#{player_id}"]["firstName"], last_name: game_rosters["ID#{player_id}"]["lastName"], position: game_rosters["ID#{player_id}"]["primaryPosition"]["code"])
       next if player[1]["stats"] == {}
 
       if profile.position != "G"
-        SkaterGameStatline.where(game_id: game, skater_id: player[1]["person"]["id"].to_i).first_or_create(game_date: date.to_date, team: team, opposition: opposition, position: profile.position, round: round)
-        sgs = SkaterGameStatline.find_by(game_id: game, skater_id: player[1]["person"]["id"])
+        SkaterGameStatline.where(game_id: game, skater_id: player_id).first_or_create(game_date: date.to_date, team: team, opposition: opposition, position: profile.position, round: round)
+        sgs = SkaterGameStatline.find_by(game_id: game, skater_id: player_id)
         goals = player[1]["stats"]["skaterStats"]["goals"].to_i
         assists = player[1]["stats"]["skaterStats"]["assists"].to_i
         points = goals + assists
