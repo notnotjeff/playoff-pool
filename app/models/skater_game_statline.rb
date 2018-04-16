@@ -20,7 +20,6 @@ class SkaterGameStatline < ApplicationRecord
   end
 
   def self.scrape_todays_games(date, rounds)
-
     games_url = "http://www.nhl.com/stats/rest/skaters?isAggregate=false&reportType=basic&isGame=true&reportName=skatersummary&cayenneExp=gameDate%3E=%22#{date}%22%20and%20gameDate%3C=%22#{date}%2023:59:59%22%20and%20gameTypeId=3"
     games = JSON.parse(Nokogiri::HTML(open(games_url)))
     games["data"].each do |game|

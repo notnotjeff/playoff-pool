@@ -49,4 +49,18 @@ class Scraper < ApplicationRecord
       end
     end
   end
+
+  def self.scrape_range_of_dates(start_date, end_date)
+    rounds = Round.get_rounds_hash
+    dates = []
+
+    (start_date..end_date).each do |date|
+  		dates << date.strftime("%Y-%m-%d")
+  	end
+
+    dates.each do |date|
+  		SkaterGameStatline.scrape_todays_games(date, rounds)
+  		GoalieGameStatline.scrape_todays_games(date, rounds)
+		end
+  end
 end
