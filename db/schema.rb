@@ -10,7 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180415061759) do
+ActiveRecord::Schema.define(version: 20180416001742) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
 
   create_table "general_managers", force: :cascade do |t|
     t.string "name"
@@ -104,7 +107,7 @@ ActiveRecord::Schema.define(version: 20180415061759) do
     t.string "position"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "round_total"
+    t.integer "round_total", default: 0
     t.index ["general_manager_id"], name: "index_roster_players_on_general_manager_id"
     t.index ["league_id"], name: "index_roster_players_on_league_id"
     t.index ["player_id", "round"], name: "index_roster_players_on_player_id_and_round"
