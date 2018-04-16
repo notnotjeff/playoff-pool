@@ -36,24 +36,20 @@ class LeaguesController < ApplicationController
   end
 
   def skaters
-    @round = set_round(params[:round].to_s)
+    @round = 0 #set_round(params[:round].to_s)
     @position = set_position(params[:position].to_s)
     @league = League.find(params[:id].to_i)
 
     if @round.to_i.between?(1,4)
-      # @skaters = RosterPlayer.where(league_id: @league, round: @round, position: @position)
-      #                         .order(round_total: :desc)
-      #                         .select(:id, :player_id, :round, :round_total)
-      #                         .group(:id, :player_id, :round, :round_total)
-      @skaters = RosterPlayer.where(league_id: @league, round: @round, position: @position).select("DISTINCT ON (roster_players.player_id, roster_players.round_total) * ").group("roster_players.player_id, roster_players.id, roster_players.round_total").order("roster_players.round_total desc")
+      @skaters = RosterPlayer.where(league_id: @league, round: @round, position: @position)
+                              .select("DISTINCT ON (roster_players.player_id, roster_players.round_total) * ")
+                              .group("roster_players.player_id, roster_players.id, roster_players.round_total")
+                              .order("roster_players.round_total desc")
     else
-      # round_count = Round.current_round
-      # (1..round_count).each do |round|
-      #   new_skaters = RosterPlayer.where(league_id: @league, position: @position)
-      #                             .order(round_total: :desc)
-      #                             .select(:id, :player_id, :round, :round_total)
-      #   @skaters = @skaters.nil? ? @skaters = new_skaters : @skaters.merge(new_skaters)
-      # end
+      @skaters = RosterPlayer.where(league_id: @league, position: @position)
+                              .select("DISTINCT ON (roster_players.player_id, roster_players.round_total, roster_players.round) * ")
+                              .group("roster_players.player_id, roster_players.id, roster_players.round_total, roster_players.round")
+                              .order("roster_players.round_total desc")
     end
   end
 
