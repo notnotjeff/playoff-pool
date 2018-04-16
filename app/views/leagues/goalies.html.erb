@@ -1,0 +1,32 @@
+<h1><%= @league.name %> Goalie Standings</h1>
+<%= link_to "Back to League", @league, class: 'btn btn-success btn-sm btn-custom' %>
+<%= render 'goalie_filter', league: @league %>
+
+<table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Name</th>
+      <th>Round</th>
+      <th>W</th>
+      <th>SO</th>
+      <th>Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if @goalies %>
+      <% i = 1 %>
+      <% @goalies.each do |goalie| %>
+        <tr>
+          <td><%= i %></td>
+          <td><%= goalie.player.statline.full_name %></td>
+          <td><%= goalie.round %></td>
+          <td><%= goalie.player.statline["r#{goalie.round}_wins".to_sym] %></td>
+          <td><%= goalie.player.statline["r#{goalie.round}_shutouts".to_sym] %></td>
+          <td><%= goalie.player.statline["r#{goalie.round}_total".to_sym] %></td>
+        </tr>
+        <% i += 1 %>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>

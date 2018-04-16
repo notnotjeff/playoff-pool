@@ -1,12 +1,8 @@
-<%= form_tag skaters_league_path(league), :method => 'get' do %>
+<%= form_tag goalies_league_path(league), :method => 'get' do %>
   <div class="row filter-row">
     <div class="col-md-2 filter-param">
       <%= label_tag :round, 'Round:'  %>
       <%= select_tag :round, options_for_select(Round.rounds_for_option, @round), { class: 'form-control' } %>
-    </div>
-    <div class="col-md-2 filter-param">
-      <%= label_tag :position, 'Position:'  %>
-      <%= select_tag :position, options_for_select(Skater.positions_for_option, @def_position), { class: 'form-control' } %>
     </div>
     <div class="col-md-2 filter-param">
       <%= submit_tag "Submit" %>

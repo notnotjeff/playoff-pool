@@ -3,10 +3,10 @@
   <div class="row">
     <% if current_user == @gm.user %>
       <div class="col-md-2">
-        <%= link_to "Change Name", edit_user_general_manager_path(@gm) %>
+        <%= link_to "Change Name", edit_user_general_manager_path(@gm), class: 'btn btn-success btn-sm btn-custom' %>
       </div>
     <% end %>
-    <div class="col-md-2"><%= link_to "Back To League", league_path(@gm.league) %></div>
+    <div class="col-md-2"><%= link_to "Back To League", league_path(@gm.league), class: 'btn btn-success btn-sm btn-custom' %></div>
   </div>
 </div>
 

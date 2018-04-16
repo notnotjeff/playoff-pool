@@ -114,3 +114,18 @@ table {
 section {
   margin-bottom: 20px;
 }
+
+.btn-custom {
+  background-color: $black;
+  color: $white !important;
+  border: 1px solid $black !important;
+  box-shadow: none;
+  outline: none !important;
+
+  &:hover, &:focus, &:active, &:active:focus {
+    background-color: $white !important;
+    color: $black !important;
+    border: 1px solid $black !important;
+    outline: none !important;
+  }
+}

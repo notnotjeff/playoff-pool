@@ -122,4 +122,8 @@ class Skater < ApplicationRecord
   def name_last_first
     return "#{last_name}, #{first_name}"
   end
+
+  def self.positions_for_option
+    return [["Any", "Any"], ["F", "F"], ["D", "D"]]
+  end
 end

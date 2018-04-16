@@ -36,8 +36,8 @@ class LeaguesController < ApplicationController
   end
 
   def skaters
-    @round = 0 #set_round(params[:round].to_s)
-    @position = set_position(params[:position].to_s)
+    @round = set_round(params[:round].to_s)
+    @position, @def_position = set_position(params[:position].to_s)
     @league = League.find(params[:id].to_i)
 
     if @round.to_i.between?(1,4)
@@ -47,6 +47,23 @@ class LeaguesController < ApplicationController
                               .order("roster_players.round_total desc")
     else
       @skaters = RosterPlayer.where(league_id: @league, position: @position)
+                              .select("DISTINCT ON (roster_players.player_id, roster_players.round_total, roster_players.round) * ")
+                              .group("roster_players.player_id, roster_players.id, roster_players.round_total, roster_players.round")
+                              .order("roster_players.round_total desc")
+    end
+  end
+
+  def goalies
+    @round = set_round(params[:round].to_s)
+    @league = League.find(params[:id].to_i)
+
+    if @round.to_i.between?(1,4)
+      @goalies = RosterPlayer.where(league_id: @league, round: @round, position: "G")
+                              .select("DISTINCT ON (roster_players.player_id, roster_players.round_total) * ")
+                              .group("roster_players.player_id, roster_players.id, roster_players.round_total")
+                              .order("roster_players.round_total desc")
+    else
+      @goalies = RosterPlayer.where(league_id: @league, position: "G")
                               .select("DISTINCT ON (roster_players.player_id, roster_players.round_total, roster_players.round) * ")
                               .group("roster_players.player_id, roster_players.id, roster_players.round_total, roster_players.round")
                               .order("roster_players.round_total desc")
@@ -70,7 +87,8 @@ class LeaguesController < ApplicationController
     end
 
     def set_position(position)
-      return ["F", "D"] if position == "Any" || position == ""
-      return position == "F" || position == "D" ? position : "F"
+      pos = position == "F" || position == "D" ? position : ["F", "D"]
+      def_pos = pos == ["F", "D"] ? "Any" : pos
+      return pos, def_pos
     end
 end

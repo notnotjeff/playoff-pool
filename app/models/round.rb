@@ -131,4 +131,12 @@ class Round < ApplicationRecord
 
     return rounds
   end
+
+  def self.rounds_for_option
+    rounds = [["Any", 0]]
+    (1..Round.current_round).each do |r|
+      rounds << ["Round #{r}", r]
+    end
+    return rounds
+  end
 end

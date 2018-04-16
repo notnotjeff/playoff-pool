@@ -1,9 +1,9 @@
 <div class="page-heading">
   <h1><%= @league.name %></h1>
-  Owner: <%= @league.user.name %>
   <div class="league-links">
-    <%= link_to "Skater Stats", skaters_league_path(@league) %>
-    <%= link_to "Destroy League", @league, method: :delete, data: { confirm: "Are you sure? This is not reversible" } if current_user == @league.user %>
+    <%= link_to "Skater Stats", skaters_league_path(@league), class: 'btn btn-success btn-sm btn-custom' %>
+    <%= link_to "Goalie Stats", goalies_league_path(@league), class: 'btn btn-success btn-sm btn-custom' %>
+    <%= link_to "Destroy League", @league, method: :delete, data: { confirm: "Are you sure? This is not reversible" }, class: 'btn btn-success btn-sm btn-custom' if current_user == @league.user %>
   </div>
 </div>
 
@@ -39,6 +39,7 @@
     </tbody>
   </table>
 </section>
+League Owner: <%= @league.user.name %>
 
 <% if current_user == @league.user && Round.current_round < 1 %>
   <section>

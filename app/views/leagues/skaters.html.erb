@@ -1,6 +1,6 @@
 <h1><%= @league.name %> Skater Standings</h1>
-<%= link_to "Back to League", @league %>
-<%= render 'player_filter' %>
+<%= link_to "Back to League", @league, class: 'btn btn-success btn-sm btn-custom' %>
+<%= render 'player_filter', league: @league %>
 
 <table>
   <thead>

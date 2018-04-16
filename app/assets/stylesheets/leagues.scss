@@ -7,6 +7,16 @@
   justify-content: left;
 
   a {
-    margin-right: 30px;
+    margin-right: 10px;
   }
+}
+
+.filter-param {
+  display: flex;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.form-control {
+  margin-left: 10px;
 }
