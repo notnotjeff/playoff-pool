@@ -62,5 +62,7 @@ class Scraper < ApplicationRecord
   		SkaterGameStatline.scrape_todays_games(date, rounds)
   		GoalieGameStatline.scrape_todays_games(date, rounds)
 		end
+
+    Skater.update_all_statlines
   end
 end
