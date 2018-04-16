@@ -25,7 +25,6 @@ class SkaterGameStatline < ApplicationRecord
     games["data"].each do |game|
       round_number = rounds[game["teamAbbrev"].to_sym][game["opponentTeamAbbrev"].to_sym].to_i
       sgs = SkaterGameStatline.find_by(game_id: game["gameId"].to_i, skater_id: game["playerId"].to_i)
-      byebug if game["playerId"].to_i == 8474564
       if sgs.nil?
         SkaterGameStatline.scrape_game(game, round_number)
       else
