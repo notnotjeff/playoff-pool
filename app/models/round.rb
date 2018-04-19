@@ -68,19 +68,26 @@ class Round < ApplicationRecord
 
   def self.set_round
     rounds = Round.get_rounds_hash
+    round_count = 0
     current_round = 1
 
     rounds.each do |t|
-      current_round = t[1].count if t[1].count > current_round
+      round_count += t[1].count
     end
 
-    if Round.current_round != current_round && Round.all.order(round_number: :asc).first.start_date <= Time.now
-      Round.change_round(current_round)
-      return "Changed round to #{current_round}"
-    elsif Round.find_by(round_number: current_round).start_date && Round.find_by(round_number: current_round).start_date <= Time.now
-      Round.change_round(current_round)
-      return "Changed round to #{current_round}"
+    if round_count >= 24 && round_count < 28
+      current_round = 2
+    elsif round_count >= 28 && round_count < 30
+      current_round = 3
+    elsif round_count >= 30
+      current_round = 4
     end
+
+    if curent_round != Round.current_round
+      Round.change_round(current_round)
+      return "Round has been changed to round #{current_round}"
+    end
+
     return "Round has not changed, it is still round #{current_round}"
   end
 
