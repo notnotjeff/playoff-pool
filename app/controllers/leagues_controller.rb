@@ -70,6 +70,10 @@ class LeaguesController < ApplicationController
     end
   end
 
+  def rules
+    @league = League.find(params[:id].to_i)
+  end
+
   private
 
     def league_params

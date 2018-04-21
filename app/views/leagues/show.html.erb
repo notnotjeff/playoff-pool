@@ -3,6 +3,7 @@
   <div class="league-links">
     <%= link_to "Skater Stats", skaters_league_path(@league), class: 'btn btn-success btn-sm btn-custom' %>
     <%= link_to "Goalie Stats", goalies_league_path(@league), class: 'btn btn-success btn-sm btn-custom' %>
+    <%= link_to "League Rules", rules_league_path(@league), class: 'btn btn-success btn-sm btn-custom' %>
     <%= link_to "Destroy League", @league, method: :delete, data: { confirm: "Are you sure? This is not reversible" }, class: 'btn btn-success btn-sm btn-custom' if current_user == @league.user %>
   </div>
 </div>

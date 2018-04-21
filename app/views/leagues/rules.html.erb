@@ -1,0 +1,43 @@
+<div class="page-heading">
+  <h1><%= @league.name %> Rules</h1>
+  <div class="league-links">
+    <%= link_to "Back to League", @league, class: 'btn btn-success btn-sm btn-custom' %>
+  </div>
+</div>
+
+
+
+<table>
+  <thead>
+    <tr>
+      <th>Skater Type</th>
+      <th>R1</th>
+      <th>R2</th>
+      <th>R3</th>
+      <th>R4</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Forwards</td>
+      <td><%= @league.r1_fw_count %></td>
+      <td><%= @league.r2_fw_count %></td>
+      <td><%= @league.r3_fw_count %></td>
+      <td><%= @league.r4_fw_count %></td>
+    </tr>
+    <tr>
+      <td>Defensemen</td>
+      <td><%= @league.r1_d_count %></td>
+      <td><%= @league.r2_d_count %></td>
+      <td><%= @league.r3_d_count %></td>
+      <td><%= @league.r4_d_count %></td>
+    </tr>
+    <tr>
+      <td>Goalies</td>
+      <td><%= @league.r1_g_count %></td>
+      <td><%= @league.r2_g_count %></td>
+      <td><%= @league.r3_g_count %></td>
+      <td><%= @league.r4_g_count %></td>
+    </tr>
+  </tbody>
+</table>
