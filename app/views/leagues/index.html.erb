@@ -1,6 +1,6 @@
 <div class="page-heading">
   <h1>Leagues</h1>
-  <%= link_to "Create League", new_league_path if user_signed_in? && Round.current_round < 1 %>
+  <%= link_to "Create League", new_league_path, class: 'btn btn-success btn-sm btn-custom' if user_signed_in? && Round.current_round < 1 %>
 </div>
 
 <table>

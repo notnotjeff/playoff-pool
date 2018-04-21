@@ -64,5 +64,6 @@ class Scraper < ApplicationRecord
 		end
 
     Skater.update_all_statlines
+    GeneralManager.update_round(Round.current_round)
   end
 end
