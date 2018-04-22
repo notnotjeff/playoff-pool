@@ -83,10 +83,12 @@ class Round < ApplicationRecord
       current_round = 4
     end
 
-    if curent_round != Round.current_round
+    if current_round != Round.current_round
       Round.change_round(current_round)
       return "Round has been changed to round #{current_round}"
     end
+
+    Round.open_lineups(current_round + 1)
 
     return "Round has not changed, it is still round #{current_round}"
   end
