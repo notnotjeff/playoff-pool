@@ -16,6 +16,7 @@ namespace :daily_functions do
 
     puts "Starting Daily Scrape for #{date.strftime("%m-%d-%y")}..."
     Scraper.update_day_of_games("#{date.strftime("%Y-%m-%d")}")
+    League.all.update_all(scraped_at: Time.now)
     puts "Ending Daily Scrape for #{date.strftime("%m-%d-%y")}"
   end
 
