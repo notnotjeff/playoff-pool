@@ -44,7 +44,7 @@
 
 <ul class="league-info">
   <li>League Owner: <%= @league.user.name %></li>
-  <li>Last Updated: <%= @gms.first.updated_at.in_time_zone('Eastern Time (US & Canada)').strftime("%I:%M:%S %p %b #{@gms.first.updated_at.in_time_zone('Eastern Time (US & Canada)').day.ordinalize}") %></li>
+  <li>Last Updated: <%= @updated_at.strftime("%I:%M:%S %p %b #{@updated_at.day.ordinalize}") %></li>
 </ul>
 
 
