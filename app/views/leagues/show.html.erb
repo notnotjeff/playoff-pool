@@ -41,7 +41,13 @@
     </tbody>
   </table>
 </section>
-League Owner: <%= @league.user.name %>
+
+<ul class="league-info">
+  <li>League Owner: <%= @league.user.name %></li>
+  <li>Last Updated: <%= @gms.first.updated_at.in_time_zone('Eastern Time (US & Canada)').strftime("%I:%M:%S %p %b #{@gms.first.updated_at.in_time_zone('Eastern Time (US & Canada)').day.ordinalize}") %></li>
+</ul>
+
+
 
 <% if current_user == @league.user && Round.current_round < 1 %>
   <section>
