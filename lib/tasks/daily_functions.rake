@@ -2,10 +2,11 @@ namespace :daily_functions do
   # Have this check once a day at noon before any games are played to see if new round will start that day so lineups get locked
   desc "Check if the current round has changed and set accordingly"
   task :set_round => :environment do
-    message = Scraper.games_today? ? Round.set_round : "There are no games today. Waiting until start of next round to change"
+    message = Scraper.games_today? ? Round.set_round : "There are no games today. Will check for a new round again tomorrow."
     puts message
   end
 
+  # Have this run overnight to double check old games still have the correct statlines
   desc "Update games being played or already played on selected date"
   task :update_stats => :environment do
     if Time.now < "11:00:00".to_time # In Heroku's timezone, its 7AM EST
