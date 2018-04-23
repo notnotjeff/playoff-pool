@@ -1,7 +1,8 @@
 namespace :daily_functions do
+  # Have this check once a day at noon before any games are played to see if new round will start that day so lineups get locked
   desc "Check if the current round has changed and set accordingly"
   task :set_round => :environment do
-    message = Round.set_round
+    message = Scraper.games_today? ? Round.set_round : "There are no games today. Waiting until start of next round to change"
     puts message
   end
 

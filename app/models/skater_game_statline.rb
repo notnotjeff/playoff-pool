@@ -40,9 +40,6 @@ class SkaterGameStatline < ApplicationRecord
     end
   end
 
-  def self.update_todays_games
-  end
-
   def self.scrape_game(game, round_number)
     sgs = SkaterGameStatline.new
     Skater.find_or_create_by(id: game["playerId"].to_i,

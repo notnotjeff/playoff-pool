@@ -66,4 +66,16 @@ class Scraper < ApplicationRecord
     Skater.update_all_statlines
     GeneralManager.update_round(Round.current_round)
   end
+
+  def self.games_today?
+    date = Time.now.to_date.strftime("%Y-%m-%d")
+    url = "https://statsapi.web.nhl.com/api/v1/schedule?startDate=#{date}&endDate=#{date}"
+    doc = JSON.parse(Nokogiri::HTML(open(url)))
+
+    if doc["dates"].count > 0
+      return true
+    else
+      return false
+    end
+  end
 end
