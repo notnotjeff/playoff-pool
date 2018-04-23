@@ -20,10 +20,10 @@ namespace :daily_functions do
     puts "Ending Daily Scrape for #{date.strftime("%m-%d-%y")}"
   end
 
-  desc "Scrape the games played on the previous day"
+  desc "Scrape the games played the previous week to fix any statistical changes"
   task :scrape => :environment do
     start_date = 12.hours.ago.to_date
-    start_date = 3.days.ago.to_date
+    start_date = 7.days.ago.to_date
     Player.seed # Make sure all players exist so new callups don't break everything
 
     puts "Starting Daily Scrape for #{date.strftime("%m-%d-%y")}..."

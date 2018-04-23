@@ -52,6 +52,9 @@ class Round < ApplicationRecord
       r.save
     end
     GeneralManager.update_round(round)
+    if round < 4
+      Round.open_lineups(round + 1)
+    end
   end
 
   def self.open_lineups(round)
@@ -72,7 +75,7 @@ class Round < ApplicationRecord
     current_round = 1
 
     rounds.each do |t|
-      round_count += t[1].count
+      round_count += t[1].count unless t[0].to_s.include?("/")
     end
 
     if round_count >= 24 && round_count < 28
