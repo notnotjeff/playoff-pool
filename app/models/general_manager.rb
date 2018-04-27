@@ -5,7 +5,7 @@ class GeneralManager < ApplicationRecord
   has_many :players, :through => :roster_players
 
   validates :league_id, uniqueness: { scope: [:user_id], message: 'User is already in this league' }
-  validates :name, length: { maximum: 50 }
+  validates :name, length: { maximum: 25 }
   before_create :has_not_started
 
   def player_pool
