@@ -29,7 +29,7 @@ namespace :daily_functions do
     Player.seed # Make sure all players exist so new callups don't break everything
 
     puts "Starting Daily Scrape..."
-    Scraper.scrape_range_of_dates("#{start_date.strftime("%Y-%m-%d")}", "#{end_date.strftime("%Y-%m-%d")}")
+    Scraper.scrape_range_of_dates(start_date, end_date)
     puts "Ending Daily Scrape!"
   end
 end
