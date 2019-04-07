@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Rails.application.routes.draw do
   devise_for :users
 
@@ -5,7 +7,7 @@ Rails.application.routes.draw do
 
   resources :users do
     resources :rosters
-    resources :general_managers, only: [:show, :edit]
+    resources :general_managers, only: %i[show edit]
   end
 
   resources :leagues do
@@ -13,9 +15,11 @@ Rails.application.routes.draw do
       get :skaters, :goalies, :rules
     end
   end
-  resources :general_managers, only: [:destroy, :update, :create]
-  resources :skaters, only: [:index, :show]
-  resources :roster_players, only: [:create, :destroy]
+  resources :general_managers, only: %i[destroy update create]
+  resources :skaters, only: %i[index show]
+  resources :roster_players, only: %i[create destroy] do
+    collection { post :import }
+  end
 
   if Rails.env.development?
     get '/updater', to: 'static_pages#updater'

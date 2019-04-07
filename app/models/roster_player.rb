@@ -1,28 +1,78 @@
+# frozen_string_literal: true
+
+require 'csv'
+require 'english'
+
 class RosterPlayer < ApplicationRecord
   belongs_to :general_manager
   belongs_to :player
 
-  validates :player_id, uniqueness: { scope: [:round, :general_manager] }
+  validates :player_id, uniqueness: { scope: %i[round general_manager] }
   before_save :has_roster_space
   before_save :lineup_open
 
-  private
-    def has_roster_space
-      player = Player.find(self.player_id)
-      gm = GeneralManager.find(self.general_manager_id)
-      league = League.find(self.league_id)
-      round = self.round
+  def self.import(file, round, gm)
+    team_abbreviations = Player.distinct.pluck(:team)
+    errors = []
+    i = 3
 
-      if player.position == "G"
-        throw :abort if gm.roster_players.where(round: round, position: "G").count >= league["r#{round}_g_count".to_sym]
-      elsif player.position == "D"
-        throw :abort if gm.roster_players.where(round: round, position: "D").count >= league["r#{round}_d_count".to_sym]
-      else
-        throw :abort if gm.roster_players.where(round: round, position: "F").count >= league["r#{round}_fw_count".to_sym]
+    CSV.parse(File.readlines(file.path).drop(3).join) do |row|
+      i += 1
+      case round
+      when '1'
+        category_column = 0
+        player_column = 1
+      when '2'
+        category_column = 4
+        player_column = 5
+      when '3'
+        category_column = 8
+        player_column = 9
+      when '4'
+        category_column = 12
+        player_column = 13
       end
+
+      next if row[category_column].nil? || %w[FORWARDS DEFENCE GOALIE].include?(row[category_column])
+
+      player_info = row[player_column].split(' (')
+      errors << "Player at row #{i} was written improperly" && next if player_info.length != 2
+
+      team = player_info[1].gsub!(/[()]/, '')
+      last_name = player_info[0]
+
+      player = Player.where('lower(last_name) = ? AND team = ?', last_name.downcase, team).first
+
+      if player.nil?
+        errors << "Unknown team: #{team} at row #{i} make sure you have the proper abbreviation" unless team_abbreviations.include?(team)
+        errors << "Unknown player: #{last_name} at row #{i} make sure you have the proper abbreviation" unless Player.where('lower(last_name) = ?', last_name.downcase).any?
+        next
+      end
+
+      gm.roster_players.build(player_id: player.id, position: player.position_category, general_manager_id: gm.id, league_id: gm.league_id, round: round).save
     end
 
-    def lineup_open
-      throw :abort if Round.lineup_round == false || Round.lineup_round != self.round
+    errors
+  end
+
+  private
+
+  def has_roster_space
+    player = Player.find(player_id)
+    gm = GeneralManager.find(general_manager_id)
+    league = League.find(league_id)
+    round = self.round
+
+    if player.position == 'G'
+      throw :abort if gm.roster_players.where(round: round, position: 'G').count >= league["r#{round}_g_count".to_sym]
+    elsif player.position == 'D'
+      throw :abort if gm.roster_players.where(round: round, position: 'D').count >= league["r#{round}_d_count".to_sym]
+    else
+      throw :abort if gm.roster_players.where(round: round, position: 'F').count >= league["r#{round}_fw_count".to_sym]
     end
+  end
+
+  def lineup_open
+    throw :abort if Round.lineup_round == false || Round.lineup_round != round
+  end
 end

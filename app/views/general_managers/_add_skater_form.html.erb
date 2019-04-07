@@ -7,5 +7,12 @@
       <%= hidden_field_tag :round_number, round %>
       <%= f.submit "Add Player" %>
     <% end %>
+    <%= form_tag import_roster_players_path, multipart: true do %>
+      <%= file_field_tag :file %>
+      <%= hidden_field_tag :league_id, @gm.league_id %>
+      <%= hidden_field_tag :general_manager_id, @gm.id %>
+      <%= hidden_field_tag :round_number, round %>
+      <%= submit_tag 'Upload CSV' %>
+    <% end %>
   <% end %>
 </section>

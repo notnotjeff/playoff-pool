@@ -29,11 +29,9 @@ class Round < ApplicationRecord
 
   def self.lineup_round
     r = Round.find_by(lineup_changes_allowed: true)
-    if r
-      return r.round_number
-    else
-      return false
-    end
+    return r.round_number if r
+
+    return false
   end
 
   def self.change_round(round)
@@ -149,6 +147,6 @@ class Round < ApplicationRecord
     (1..Round.current_round).each do |r|
       rounds << ["Round #{r}", r]
     end
-    return rounds
+    rounds
   end
 end
