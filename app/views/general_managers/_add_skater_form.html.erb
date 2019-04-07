@@ -1,18 +1,25 @@
 <section class="add-player">
-  <% if current_user == @gm.user %>
-    <%= form_for @gm.roster_players.build, remote: true do |f| %>
-      <%= f.select :player_id, options_for_select(@gm.player_pool.map { |p| ["#{p.last_name}, #{p.first_name} (#{p.position})", p.id] }) %>
-      <%= hidden_field_tag :league_id, @gm.league_id %>
-      <%= hidden_field_tag :general_manager_id, @gm.id %>
-      <%= hidden_field_tag :round_number, round %>
-      <%= f.submit "Add Player" %>
+  <div class="form-container">
+    <% if current_user == @gm.user %>
+      <%= form_for @gm.roster_players.build, remote: true do |f| %>
+        <%= f.select :player_id, options_for_select(@gm.player_pool.map { |p| ["#{p.last_name}, #{p.first_name} (#{p.position})", p.id] }) %>
+        <%= hidden_field_tag :league_id, @gm.league_id %>
+        <%= hidden_field_tag :general_manager_id, @gm.id %>
+        <%= hidden_field_tag :round_number, round %>
+        <%= f.submit "Add Player" %>
+      <% end %>
+      <% unless mobile_device?%>
+        <div class='or'>
+          or
+        </div>
+        <%= form_tag import_roster_players_path, multipart: true do %>
+          <%= file_field_tag :file %>
+          <%= hidden_field_tag :league_id, @gm.league_id %>
+          <%= hidden_field_tag :general_manager_id, @gm.id %>
+          <%= hidden_field_tag :round_number, round %>
+          <%= submit_tag 'Upload CSV' %>
+        <% end %>
+      <% end %>
     <% end %>
-    <%= form_tag import_roster_players_path, multipart: true do %>
-      <%= file_field_tag :file %>
-      <%= hidden_field_tag :league_id, @gm.league_id %>
-      <%= hidden_field_tag :general_manager_id, @gm.id %>
-      <%= hidden_field_tag :round_number, round %>
-      <%= submit_tag 'Upload CSV' %>
-    <% end %>
-  <% end %>
+  </div>
 </section>

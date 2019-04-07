@@ -129,3 +129,27 @@ section {
     outline: none !important;
   }
 }
+
+.form-container {
+  display: flex;
+  box-sizing: border-box;
+  padding: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.or {
+  text-align: center;
+  padding: 0 40px;
+}
+
+@media only screen and (max-width: 1150px) {
+  .form-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  .or {
+    padding: 20px 0;
+    text-align: left;
+  }
+}

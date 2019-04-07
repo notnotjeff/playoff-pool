@@ -55,13 +55,13 @@ class Scraper < ApplicationRecord
     dates = []
 
     (start_date..end_date).each do |date|
-  		dates << date.strftime("%Y-%m-%d")
-  	end
+      dates << date.strftime("%Y-%m-%d")
+    end
 
     dates.each do |date|
-  		SkaterGameStatline.scrape_todays_games(date, rounds)
-  		GoalieGameStatline.scrape_todays_games(date, rounds)
-		end
+      SkaterGameStatline.scrape_todays_games(date, rounds)
+      GoalieGameStatline.scrape_todays_games(date, rounds)
+    end
 
     Skater.update_all_statlines
     GeneralManager.update_round(Round.current_round)
@@ -72,10 +72,8 @@ class Scraper < ApplicationRecord
     url = "https://statsapi.web.nhl.com/api/v1/schedule?startDate=#{date}&endDate=#{date}"
     doc = JSON.parse(Nokogiri::HTML(open(url)))
 
-    if doc["dates"].count > 0
-      return true
-    else
-      return false
-    end
+    return true if doc["dates"].count.positive?
+
+    false
   end
 end
