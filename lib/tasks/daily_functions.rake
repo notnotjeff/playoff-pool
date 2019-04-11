@@ -11,6 +11,11 @@ namespace :daily_functions do
   # Have this run overnight to double check old games still have the correct statlines
   desc 'Update games being played or already played on selected date'
   task update_stats: :environment do
+    if Round.current_round == 0
+      p 'League has not started, set round to at least 1 before trying again'
+      next
+    end
+
     if Time.now < '11:00:00'.to_time # In Heroku's timezone, its 7AM EST
       date = 12.hours.ago.to_datetime
     else
@@ -25,6 +30,11 @@ namespace :daily_functions do
 
   desc 'Scrape the games played the previous week to fix any statistical changes'
   task scrape: :environment do
+    if Round.current_round == 0
+      p 'League has not started, set round to at least 1 before trying again'
+      next
+    end
+
     end_date = 12.hours.ago.to_date
     start_date = 8.days.ago.to_date
     Player.seed # Make sure all players exist so new callups don't break everything

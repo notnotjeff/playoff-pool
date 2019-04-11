@@ -2,7 +2,7 @@ class Round < ApplicationRecord
   require 'open-uri'
 
   def self.seed_rounds
-    Round.create!(name: "Round 1", round_number: 1, current_round: false, lineup_changes_allowed: true, round_finished: false, start_date: "11-04-2018".to_date, end_date: nil)
+    Round.create!(name: "Round 1", round_number: 1, current_round: false, lineup_changes_allowed: true, round_finished: false, start_date: "10-04-2019".to_date, end_date: nil)
     Round.create!(name: "Round 2", round_number: 2, current_round: false, lineup_changes_allowed: false, round_finished: false, start_date: nil, end_date: nil)
     Round.create!(name: "Round 3", round_number: 3, current_round: false, lineup_changes_allowed: false, round_finished: false, start_date: nil, end_date: nil)
     Round.create!(name: "Round 4", round_number: 4, current_round: false, lineup_changes_allowed: false, round_finished: false, start_date: nil, end_date: nil)
@@ -120,7 +120,8 @@ class Round < ApplicationRecord
   end
 
   def self.get_rounds_hash
-    url = "https://statsapi.web.nhl.com/api/v1/tournaments/playoffs?site=en_nhl&expand=round.series,schedule.game.seriesSummary&season=20172018"
+    season_range = Time.now.last_year.strftime('%Y') + Time.now.strftime('%Y')
+    url = "https://statsapi.web.nhl.com/api/v1/tournaments/playoffs?site=en_nhl&expand=round.series,schedule.game.seriesSummary&season=#{season_range}"
     doc = JSON.parse(Nokogiri::HTML(open(url)))
     rounds = {}
 

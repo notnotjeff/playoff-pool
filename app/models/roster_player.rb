@@ -9,6 +9,7 @@ class RosterPlayer < ApplicationRecord
   validates :player_id, uniqueness: { scope: %i[round general_manager] }
   before_save :has_roster_space
   before_save :lineup_open
+  before_save :update_stats
 
   def self.import(file, round, gm)
     team_abbreviations = Player.distinct.pluck(:team)
@@ -73,5 +74,19 @@ class RosterPlayer < ApplicationRecord
 
   def lineup_open
     throw :abort if Round.lineup_round == false || Round.lineup_round != round
+  end
+
+  def update_stats
+    if position == 'G'
+      goalie = Goalie.find_by(id: player_id)
+      return if goalie.nil?
+
+      goalie.update_statline
+    else
+      skater = Skater.find_by(id: player_id)
+      return if skater.nil?
+
+      skater.update_statline
+    end
   end
 end

@@ -6,7 +6,8 @@ class Skater < ApplicationRecord
   validates :id, uniqueness: true
 
   def self.scrape_skaters
-    url = "http://www.nhl.com/stats/rest/skaters?isAggregate=false&reportType=basic&isGame=false&reportName=skatersummary&cayenneExp=gameTypeId=3%20and%20seasonId%3E=20162017%20and%20seasonId%3C=20162017"
+    year_range = Time.now.last_year.strftime('%Y') + Time.now.strftime('%Y')
+    url = "http://www.nhl.com/stats/rest/skaters?isAggregate=false&reportType=basic&isGame=false&reportName=skatersummary&cayenneExp=gameTypeId=3%20and%20seasonId%3E=#{year_range}%20and%20seasonId%3C=#{year_range}"
     skaters = JSON.parse(Nokogiri::HTML(open(url)))
     skaters["data"].each do |skater|
       p = Player.new

@@ -6,8 +6,9 @@ class SkaterGameStatline < ApplicationRecord
 
   def self.scrape_all_games
     rounds = Round.get_rounds_hash
+    season_year = Time.now.strftime('%Y')
 
-    games_url = "http://www.nhl.com/stats/rest/skaters?isAggregate=false&reportType=basic&isGame=true&reportName=skatersummary&cayenneExp=gameDate%3E=%222018-04-09%22%20and%20gameDate%3C=%222018-07-03%22%20and%20gameTypeId=3"
+    games_url = "http://www.nhl.com/stats/rest/skaters?isAggregate=false&reportType=basic&isGame=true&reportName=skatersummary&cayenneExp=gameDate%3E=%22#{season_year}-04-09%22%20and%20gameDate%3C=%22#{season_year}-07-03%22%20and%20gameTypeId=3"
     games = JSON.parse(Nokogiri::HTML(open(games_url)))
     games["data"].each do |game|
       round_number = rounds[game["teamAbbrev"].to_sym][game["opponentTeamAbbrev"].to_sym].to_i
@@ -20,7 +21,7 @@ class SkaterGameStatline < ApplicationRecord
   end
 
   def self.scrape_todays_games(date, rounds)
-    games_url = "http://www.nhl.com/stats/rest/skaters?isAggregate=false&reportType=basic&isGame=true&reportName=skatersummary&cayenneExp=gameDate%3E=%22#{date}%22%20and%20gameDate%3C=%22#{date}%2023:59:59%22%20and%20gameTypeId=3"
+    games_url = "http://www.nhl.com/stats/rest/skaters?isAggregate=false&reportType=basic&isGame=true&reportName=skatersummary&sort=[{%22property%22:%22points%22,%22direction%22:%22DESC%22},{%22property%22:%22goals%22,%22direction%22:%22DESC%22},{%22property%22:%22assists%22,%22direction%22:%22DESC%22}]&cayenneExp=gameDate%3E=%22#{date}%22%20and%20gameDate%3C=%22#{date}%2023:59:59%22%20and%20gameTypeId=3"
     games = JSON.parse(Nokogiri::HTML(open(games_url)))
     games["data"].each do |game|
       round_number = rounds[game["teamAbbrev"].to_sym][game["opponentTeamAbbrev"].to_sym].to_i
@@ -32,7 +33,8 @@ class SkaterGameStatline < ApplicationRecord
                               assists: game["assists"],
                               points: game["points"],
                               game_winning_goals: game["gameWinningGoals"],
-                              ot_goals: game["otGoals"]
+                              ot_goals: game["otGoals"],
+                              round: round_number
                             )
         sgs.skater.update_statline
         sgs.save

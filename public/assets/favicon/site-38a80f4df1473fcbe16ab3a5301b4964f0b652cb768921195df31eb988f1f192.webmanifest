@@ -1,0 +1,19 @@
+{
+    "name": "",
+    "short_name": "",
+    "icons": [
+        {
+            "src": "/assets/favicon/android-chrome-192x192-b117eb0015209eacbdb2a1f606674cdf7cedc06cb9a1542ae4b746cad739ac32.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/assets/favicon/android-chrome-256x256-57b8b97e9a39d871625c2dd96d20c21d58299d2bc9431557222c6442a959efa5.png",
+            "sizes": "256x256",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#ffffff",
+    "background_color": "#ffffff",
+    "display": "standalone"
+}

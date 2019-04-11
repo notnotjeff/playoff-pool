@@ -5,6 +5,7 @@
     <%= link_to "Skater Stats", skaters_league_path(@league), class: 'btn btn-success btn-sm btn-custom' %>
     <%= link_to "Goalie Stats", goalies_league_path(@league), class: 'btn btn-success btn-sm btn-custom' %>
     <%= link_to "League Rules", rules_league_path(@league), class: 'btn btn-success btn-sm btn-custom' %>
+    <%= link_to "My Team", user_general_manager_path(current_user.id, @user_team), class: 'btn btn-success btn-sm btn-custom' if @league.general_managers.include? @user_team %>
     <%= link_to "Destroy League", @league, method: :delete, data: { confirm: "Are you sure? This is not reversible" }, class: 'btn btn-success btn-sm btn-custom' if current_user == @league.user %>
   </div>
 </div>

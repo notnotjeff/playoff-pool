@@ -12,6 +12,7 @@ class LeaguesController < ApplicationController
     @league = League.find(params[:id])
     @gms = GeneralManager.where(league_id: @league).order(points: :desc)
     @gm = @league.general_managers.build
+    @user_team = current_user.teams.where(league_id: @league.id).first
     @updated_at = @league.scraped_at.nil? ? nil : @league.scraped_at.in_time_zone('Eastern Time (US & Canada)').strftime("%I:%M:%S %p %b #{@league.scraped_at.day.ordinalize}")
   end
 

@@ -80,24 +80,22 @@ class Goalie < ApplicationRecord
                             r4_total: r4_total
                           )
 
-    RosterPlayer.where(player_id: self.id, round: 1).update_all(round_total: r1_total)
-    RosterPlayer.where(player_id: self.id, round: 2).update_all(round_total: r2_total)
-    RosterPlayer.where(player_id: self.id, round: 3).update_all(round_total: r3_total)
-    RosterPlayer.where(player_id: self.id, round: 4).update_all(round_total: r4_total)
-    Player.find(self.id).update_attributes(rounds: latest_round)
+    RosterPlayer.where(player_id: id, round: 1).update_all(round_total: r1_total)
+    RosterPlayer.where(player_id: id, round: 2).update_all(round_total: r2_total)
+    RosterPlayer.where(player_id: id, round: 3).update_all(round_total: r3_total)
+    RosterPlayer.where(player_id: id, round: 4).update_all(round_total: r4_total)
+    Player.find(id).update_attributes(rounds: latest_round)
   end
 
   def self.update_all_statlines
-    Goalie.all.each do |go|
-      go.update_statline
-    end
+    Goalie.all.each(&:update_statline)
   end
 
   def full_name
-    return "#{first_name} #{last_name}"
+    "#{first_name} #{last_name}"
   end
 
   def name_last_first
-    return "#{last_name}, #{first_name}"
+    "#{last_name}, #{first_name}"
   end
 end
