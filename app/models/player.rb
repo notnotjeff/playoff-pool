@@ -35,7 +35,7 @@ class Player < ApplicationRecord
   end
 
   def self.seed
-    url = "https://statsapi.web.nhl.com/api/v1/teams?site=en_nhl&teamId=30,52,24,21,29,6,26,4,18,1,5,28,14,10,54,15&expand=team.roster,team.stats,roster.person,person.stats&stats=statsSingleSeason"
+    url = "https://statsapi.web.nhl.com/api/v1/teams?site=en_nhl&teamId=12,52,19,21,29,6,20,25,18,2,5,28,14,10,54,15&expand=team.roster,team.stats,roster.person,person.stats&stats=statsSingleSeason"
     doc = JSON.parse(Nokogiri::HTML(open(url)))
     doc["teams"].each do |t|
       team = t["abbreviation"]
