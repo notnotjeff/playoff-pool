@@ -1,10 +1,12 @@
 <% provide(:title, "#{@gm.name} Roster".html_safe) %>
 <div class="page-heading">
   <h1><%= link_to @league.name, league_path(@league) %> // <%= @gm.name %> Roster</h1>
+  <div class="league-links">
     <% if current_user == @gm.user %>
       <%= link_to "Change Name", edit_user_general_manager_path(@gm), class: 'btn btn-success btn-sm btn-custom' %>
     <% end %>
     <%= link_to "Back To League", league_path(@gm.league), class: 'btn btn-success btn-sm btn-custom' %>
+  </div>
 </div>
 
 <section>
