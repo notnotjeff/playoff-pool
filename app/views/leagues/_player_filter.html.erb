@@ -9,6 +9,10 @@
       <%= select_tag :position, options_for_select(Skater.positions_for_option, @def_position), { class: 'form-control' } %>
     </div>
     <div class="col-md-2 filter-param">
+      <%= label_tag :team, 'Team:'  %>
+      <%= select_tag :team, options_for_select(@league.teams.unshift('Any'), @team), { class: 'form-control' } %>
+    </div>
+    <div class="col-md-2 filter-param">
       <%= submit_tag "Submit" %>
     </div>
   </div>

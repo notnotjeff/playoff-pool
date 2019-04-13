@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GeneralManagersController < ApplicationController
   before_action :is_owner, only: :create
   before_action :is_user, only: :destroy
@@ -6,7 +8,7 @@ class GeneralManagersController < ApplicationController
     @gm = GeneralManager.new(general_manager_params)
     @gm.league_id = params[:league_id].to_i
     if @gm.save
-      flash[:success] = "Team added!"
+      flash[:success] = 'Team added!'
       @gm.update_attributes(name: @gm.user.name)
     end
     redirect_to league_path(League.find(@gm.league_id))
@@ -15,7 +17,7 @@ class GeneralManagersController < ApplicationController
   def destroy
     @gm = GeneralManager.find(params[:id])
     league = @gm.league
-    flash[:success] = "Team deleted!"
+    flash[:success] = 'Team deleted!'
     @gm.destroy
     redirect_to league_path(league)
   end
@@ -24,9 +26,19 @@ class GeneralManagersController < ApplicationController
     @gm = GeneralManager.find(params[:id].to_i)
     @league = @gm.league
 
-    @forwards = @gm.roster_players.where(position: "F").joins("LEFT JOIN skater_game_statlines sgs ON sgs.skater_id = roster_players.player_id AND sgs.game_date = '#{(Time.now - 24.hours).strftime('%Y-%m-%d')}'").select('roster_players.*, CASE WHEN sgs.id > 0 THEN true ELSE false END AS playing, sgs.round AS round').order(round_total: :desc)
-    @defensemen = @gm.roster_players.where(position: "D").joins("LEFT JOIN skater_game_statlines sgs ON sgs.skater_id = roster_players.player_id AND sgs.game_date = '#{(Time.now - 24.hours).strftime('%Y-%m-%d')}'").select('roster_players.*, CASE WHEN sgs.id > 0 THEN true ELSE false END AS playing, sgs.round AS round').order(round_total: :desc)
-    @goalies = @gm.roster_players.where(position: "G").joins("LEFT JOIN goalie_game_statlines ggs ON ggs.skater_id = roster_players.player_id AND ggs.game_date = '#{(Time.now - 24.hours).strftime('%Y-%m-%d')}'").select('roster_players.*, CASE WHEN ggs.id > 0 THEN true ELSE false END AS playing, ggs.round AS round').order(round_total: :desc)
+    @forwards = @gm.roster_players.where(position: 'F')
+                   .joins("LEFT JOIN skater_game_statlines sgs ON sgs.skater_id = roster_players.player_id AND sgs.game_date = '#{(Time.now - 12.hours).strftime('%Y-%m-%d')}'")
+                   .select('roster_players.*, CASE WHEN sgs.id > 0 THEN true ELSE false END AS playing, sgs.round AS round')
+                   .order(round_total: :desc)
+    @defensemen = @gm.roster_players.where(position: 'D')
+                     .joins("LEFT JOIN skater_game_statlines sgs ON sgs.skater_id = roster_players.player_id AND sgs.game_date = '#{(Time.now - 12.hours).strftime('%Y-%m-%d')}'")
+                     .select('roster_players.*, CASE WHEN sgs.id > 0 THEN true ELSE false END AS playing, sgs.round AS round')
+                     .order(round_total: :desc)
+    @goalies = @gm.roster_players
+                  .where(position: 'G')
+                  .joins("LEFT JOIN goalie_game_statlines ggs ON ggs.skater_id = roster_players.player_id AND ggs.game_date = '#{(Time.now - 12.hours).strftime('%Y-%m-%d')}'")
+                  .select('roster_players.*, CASE WHEN ggs.id > 0 THEN true ELSE false END AS playing, ggs.round AS round')
+                  .order(round_total: :desc)
 
     @r1 = @r2 = @r3 = @r4 = ""
     round = params[:round_number].nil? ? Round.current_round : params[:round_number].to_i

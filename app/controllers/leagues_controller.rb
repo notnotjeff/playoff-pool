@@ -41,17 +41,39 @@ class LeaguesController < ApplicationController
     @round = set_round(params[:round].to_s)
     @position, @def_position = set_position(params[:position].to_s)
     @league = League.find(params[:id].to_i)
+    @team = params[:team].to_s
+    teams = @league.teams.include?(@team) ? [] << @team : @league.teams
 
     if @round.to_i.between?(1, 4)
       @skaters = RosterPlayer.where(league_id: @league, round: @round, position: @position)
-                             .select('DISTINCT ON (roster_players.player_id, roster_players.round_total) * ')
-                             .group('roster_players.player_id, roster_players.id, roster_players.round_total')
-                             .order('roster_players.round_total desc')
+                             .joins('LEFT JOIN skaters ON skaters.id = roster_players.player_id')
+                             .group('roster_players.player_id')
+                             .order('round_total desc')
+                             .select("MAX(roster_players.round_total) AS round_total,
+                                      MAX(skaters.r#{@round}_goals) AS goals,
+                                      MAX(skaters.r#{@round}_assists) AS assists,
+                                      MAX(skaters.r#{@round}_points) AS points,
+                                      MAX(skaters.r#{@round}_ot_goals) AS ot_goals,
+                                      CONCAT(MAX(skaters.first_name), ' ', MAX(skaters.last_name)) AS full_name,
+                                      MAX(skaters.position) AS position,
+                                      MAX(roster_players.round) AS round,
+                                      MAX(skaters.team) AS team")
+                             .where('skaters.team IN (?)', teams)
     else
       @skaters = RosterPlayer.where(league_id: @league, position: @position)
-                             .select('DISTINCT ON (roster_players.player_id, roster_players.round_total, roster_players.round) * ')
-                             .group('roster_players.player_id, roster_players.id, roster_players.round_total, roster_players.round')
-                             .order('roster_players.round_total desc')
+                             .joins('LEFT JOIN skaters ON skaters.id = roster_players.player_id')
+                             .group('roster_players.player_id')
+                             .order('round_total desc')
+                             .select("MAX(roster_players.round_total) AS round_total,
+                                      MAX(skaters.goals) AS goals,
+                                      MAX(skaters.assists) AS assists,
+                                      MAX(skaters.points) AS points,
+                                      MAX(skaters.ot_goals) AS ot_goals,
+                                      CONCAT(MAX(skaters.first_name), ' ', MAX(skaters.last_name)) AS full_name,
+                                      MAX(skaters.position) AS position,
+                                      MAX(roster_players.round) AS round,
+                                      MAX(skaters.team) AS team")
+                             .where('skaters.team IN (?)', teams)
     end
   end
 

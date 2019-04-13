@@ -104,7 +104,11 @@ class Skater < ApplicationRecord
                             r1_total: r1_total,
                             r2_total: r2_total,
                             r3_total: r3_total,
-                            r4_total: r4_total
+                            r4_total: r4_total,
+                            goals: r1_goals + r2_goals + r3_goals + r4_goals,
+                            assists: r1_assists + r2_assists + r3_assists + r4_assists,
+                            points: r1_points + r2_points + r3_points + r4_points,
+                            ot_goals: r1_ot_goals + r2_ot_goals + r3_ot_goals + r4_ot_goals
                           )
 
     RosterPlayer.where(player_id: self.id, round: 1).update_all(round_total: r1_total)

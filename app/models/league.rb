@@ -14,6 +14,10 @@ class League < ApplicationRecord
     general_managers.joins(:roster_players).select('roster_players.player_id AS id').where("roster_players.position = 'G'")
   end
 
+  def teams
+    general_managers.joins({:roster_players => :player}).order('team ASC').select('players.team AS team').distinct.pluck(:team)
+  end
+
   private
 
   def playoffs_started?

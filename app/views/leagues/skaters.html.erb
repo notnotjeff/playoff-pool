@@ -8,6 +8,7 @@
     <tr>
       <th>#</th>
       <th>Name</th>
+      <th>Team</th>
       <th>POS</th>
       <th>Round</th>
       <th>G</th>
@@ -23,14 +24,15 @@
       <% @skaters.each do |skater| %>
         <tr>
           <td><%= i %></td>
-          <td><%= skater.player.statline.full_name %></td>
-          <td><%= skater.player.position %></td>
+          <td><%= skater.full_name %></td>
+          <td><%= skater.team %></td>
+          <td><%= skater.position %></td>
           <td><%= skater.round %></td>
-          <td><%= skater.player.statline["r#{skater.round}_goals".to_sym] %></td>
-          <td><%= skater.player.statline["r#{skater.round}_assists".to_sym] %></td>
-          <td><%= skater.player.statline["r#{skater.round}_points".to_sym] %></td>
-          <td><%= skater.player.statline["r#{skater.round}_ot_goals".to_sym] %></td>
-          <td><%= skater.player.statline["r#{skater.round}_total".to_sym] %></td>
+          <td><%= skater.goals %></td>
+          <td><%= skater.assists %></td>
+          <td><%= skater.points %></td>
+          <td><%= skater.ot_goals %></td>
+          <td><%= skater.round_total %></td>
         </tr>
         <% i += 1 %>
       <% end %>
