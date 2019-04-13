@@ -1,6 +1,8 @@
 <% provide(:title, "#{@league.name} Skater Scoreboard") %>
 <h1><%= @league.name %> Skater Standings</h1>
-<%= link_to "Back to League", @league, class: 'btn btn-success btn-sm btn-custom' %>
+<div class="league-links">
+  <%= link_to "Back to League", @league, class: 'btn btn-success btn-sm btn-custom' %>
+</div>
 <%= render 'player_filter', league: @league %>
 
 <table>

@@ -1,6 +1,8 @@
 <% provide(:title, "#{@league.name} Goalie Scoreboard") %>
 <h1><%= @league.name %> Goalie Standings</h1>
-<%= link_to "Back to League", @league, class: 'btn btn-success btn-sm btn-custom' %>
+<div class="league-links">
+  <%= link_to "Back to League", @league, class: 'btn btn-success btn-sm btn-custom' %>
+</div>
 <%= render 'goalie_filter', league: @league %>
 
 <table>
