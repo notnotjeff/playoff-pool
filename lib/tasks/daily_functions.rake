@@ -11,7 +11,7 @@ namespace :daily_functions do
   # Have this run overnight to double check old games still have the correct statlines
   desc 'Update games being played or already played on selected date'
   task update_stats: :environment do
-    if Round.current_round == 0
+    if Round.current_round.zero?
       p 'League has not started, set round to at least 1 before trying again'
       next
     end
@@ -30,7 +30,7 @@ namespace :daily_functions do
 
   desc 'Scrape the games played the previous week to fix any statistical changes'
   task scrape: :environment do
-    if Round.current_round == 0
+    if Round.current_round.zero?
       p 'League has not started, set round to at least 1 before trying again'
       next
     end

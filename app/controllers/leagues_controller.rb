@@ -97,13 +97,9 @@ class LeaguesController < ApplicationController
   def active_players
     @league = League.find(params[:id].to_i)
     @skaters = SkaterGameStatline.where(game_date: (Time.now - 12.hours).strftime('%Y-%m-%d'), skater_id: @league.skaters)
-                                 .select("skater_game_statlines.*, CONCAT(skaters.first_name, ' ', skaters.last_name) AS full_name, skater_game_statlines.points + skater_game_statlines.ot_goals AS value")
-                                 .order('value DESC')
+                                 .select("skater_game_statlines.*, CONCAT(skaters.first_name, ' ', skaters.last_name) AS full_name")
+                                 .order('points DESC')
                                  .joins(:skater)
-    @goalies = GoalieGameStatline.where(game_date: (Time.now - 12.hours).strftime('%Y-%m-%d'), skater_id: @league.goalies)
-                                 .select("goalie_game_statlines.*, CONCAT(goalies.first_name, ' ', goalies.last_name) AS full_name, goalie_game_statlines.win + goalie_game_statlines.shutout AS value")
-                                 .order('value DESC')
-                                 .joins(:goalie)
   end
 
   def rules

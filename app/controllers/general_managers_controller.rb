@@ -70,17 +70,18 @@ class GeneralManagersController < ApplicationController
   end
 
   private
-    def general_manager_params
-      params.require(:general_manager).permit(:user_id, :name, :league_id)
-    end
 
-    def is_owner
-      @league = current_user.leagues.find(params[:league_id].to_i)
-      redirect_to root_url if @league.nil?
-    end
+  def general_manager_params
+    params.require(:general_manager).permit(:user_id, :name, :league_id)
+  end
 
-    def is_user
-      @gm = GeneralManager.find(params[:id])
-      redirect_to root_url if current_user == @gm.user
-    end
+  def is_owner
+    @league = current_user.leagues.find(params[:league_id].to_i)
+    redirect_to root_url if @league.nil?
+  end
+
+  def is_user
+    @gm = GeneralManager.find(params[:id])
+    redirect_to root_url if current_user == @gm.user
+  end
 end

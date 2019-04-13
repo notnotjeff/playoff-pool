@@ -69,8 +69,7 @@ class SkaterGameStatline < ApplicationRecord
                           points: game["points"],
                           game_winning_goals: game["gameWinningGoals"],
                           ot_goals: game["otGoals"],
-                          round: round_number
-                        )
+                          round: round_number)
     sgs.skater.update_statline
     sgs.save
   end

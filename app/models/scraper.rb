@@ -19,7 +19,7 @@ class Scraper < ApplicationRecord
       away_team = game_doc["liveData"]["boxscore"]["teams"]["home"]["team"]["abbreviation"]
       round = round_hash[home_team.to_sym][away_team.to_sym]
 
-      if true #status != "Final"
+      if status != 'Final'
         Scraper.update_team(game_doc["liveData"]["boxscore"]["teams"]["away"]["players"], game_doc["gameData"]["players"], away_team, home_team, round, date, game)
         Scraper.update_team(game_doc["liveData"]["boxscore"]["teams"]["home"]["players"], game_doc["gameData"]["players"], home_team, away_team, round, date, game)
       end
