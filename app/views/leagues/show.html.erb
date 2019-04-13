@@ -1,7 +1,8 @@
-<% provide(:title, "#{@league.name}") %>
+<% provide(:title, "#{@league.name}".html_safe) %>
 <div class="page-heading">
   <h1><%= @league.name %></h1>
   <div class="league-links">
+    <%= link_to "Today's Players", active_players_league_path(@league), class: 'btn btn-success btn-sm btn-custom' %>
     <%= link_to "Skater Stats", skaters_league_path(@league), class: 'btn btn-success btn-sm btn-custom' %>
     <%= link_to "Goalie Stats", goalies_league_path(@league), class: 'btn btn-success btn-sm btn-custom' %>
     <%= link_to "League Rules", rules_league_path(@league), class: 'btn btn-success btn-sm btn-custom' %>

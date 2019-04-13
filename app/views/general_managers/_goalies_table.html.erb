@@ -3,20 +3,20 @@
     <tr>
       <th>Goalie</th>
       <th>W</th>
-      <th>S</th>
+      <th>SO</th>
       <th>Total</th>
     </tr>
   </thead>
   <tbody>
-    <% goalies.each do |s| %>
+    <% @goalies.each do |g| %>
       <tr>
         <td>
-          <%= s.player.full_name %>
-          <%= link_to "X", roster_player_path(@gm.roster_players.find_by(player_id: s.player.id, round: round)), method: :delete if current_user == @gm.user && Round.lineup_round == round %>
+          <span class='<%= 'active-player' if g.playing %>'><%= g.player.full_name %></span>
+          <%= link_to "X", roster_player_path(@gm.roster_players.find_by(player_id: g.player.id, round: round)), method: :delete if current_user == @gm.user && Round.lineup_round == round %>
         </td>
-        <td><%= s.player.statline["r#{round}_wins".to_sym] %></td>
-        <td><%= s.player.statline["r#{round}_shutouts".to_sym] %></td>
-        <td><%= s.player.statline["r#{round}_total".to_sym] %></td>
+        <td><%= g.player.statline["r#{round}_wins".to_sym] %></td>
+        <td><%= g.player.statline["r#{round}_shutouts".to_sym] %></td>
+        <td><%= g.player.statline["r#{round}_total".to_sym] %></td>
       </tr>
     <% end %>
   </tbody>

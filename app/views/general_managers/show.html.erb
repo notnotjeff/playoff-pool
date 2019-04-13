@@ -1,4 +1,4 @@
-<% provide(:title, "#{@gm.name} Roster") %>
+<% provide(:title, "#{@gm.name} Roster".html_safe) %>
 <div class="page-heading">
   <h1><%= link_to @league.name, league_path(@league) %> // <%= @gm.name %> Roster</h1>
     <% if current_user == @gm.user %>

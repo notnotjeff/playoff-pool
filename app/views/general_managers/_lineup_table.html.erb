@@ -6,14 +6,14 @@
 
 <section class="roster-tables">
   <% if (current_user && @gm.user_id == current_user.id) || Round.round_finished?(round) || Round.current_round == round %>
-    <h3>Forwards (<%= forwards.count %>/<%= @league["r#{round}_fw_count".to_sym] %>)</h3>
-    <%= render 'skaters_table', players: forwards, round: round %>
+    <h3>Forwards (<%= @forwards.length %>/<%= @league["r#{round}_fw_count".to_sym] %>)</h3>
+    <%= render 'forwards_table', round: round %>
 
-    <h3>Defensemen (<%= defensemen.count %>/<%= @league["r#{round}_d_count".to_sym] %>)</h3>
-    <%= render 'skaters_table', players: defensemen, round: round %>
+    <h3>Defensemen (<%= @defensemen.length %>/<%= @league["r#{round}_d_count".to_sym] %>)</h3>
+    <%= render 'defencemen_table', round: round %>
 
-    <h3>Goalies (<%= goalies.count %>/<%= @league["r#{round}_g_count".to_sym] %>)</h3>
-    <%= render 'goalies_table', goalies: goalies, round: round %>
+    <h3>Goalies (<%= @goalies.length %>/<%= @league["r#{round}_g_count".to_sym] %>)</h3>
+    <%= render 'goalies_table', round: round %>
     <section>
       <h3>Round Points (<%= @gm["r#{round}_points"] || 0 %>)</h3>
       <h3>Total Points (<%= @gm.points || 0 %>)</h3>

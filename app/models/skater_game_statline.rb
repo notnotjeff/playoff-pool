@@ -21,9 +21,11 @@ class SkaterGameStatline < ApplicationRecord
   end
 
   def self.scrape_todays_games(date, rounds)
-    games_url = "http://www.nhl.com/stats/rest/skaters?isAggregate=false&reportType=basic&isGame=true&reportName=skatersummary&sort=[{%22property%22:%22points%22,%22direction%22:%22DESC%22},{%22property%22:%22goals%22,%22direction%22:%22DESC%22},{%22property%22:%22assists%22,%22direction%22:%22DESC%22}]&cayenneExp=gameDate%3E=%22#{date}%22%20and%20gameDate%3C=%22#{date}%2023:59:59%22%20and%20gameTypeId=3"
+    games_url = "http://www.nhl.com/stats/rest/skaters?isAggregate=false&reportType=basic&isGame=true&reportName=skatersummary&cayenneExp=gameDate%3E=%22#{date}%22%20and%20gameDate%3C=%22#{date}%2023:59:59%22%20and%20gameTypeId=3"
     games = JSON.parse(Nokogiri::HTML(open(games_url)))
     games["data"].each do |game|
+      next if game["gamesPlayed"] == 0
+
       round_number = rounds[game["teamAbbrev"].to_sym][game["opponentTeamAbbrev"].to_sym].to_i
       sgs = SkaterGameStatline.find_by(game_id: game["gameId"].to_i, skater_id: game["playerId"].to_i)
       if sgs.nil?
@@ -56,12 +58,11 @@ class SkaterGameStatline < ApplicationRecord
                               position: game["playerPositionCode"],
                               team: game["teamAbbrev"],
                               rounds: round_number)
-
     sgs.update_attributes(skater_id: game["playerId"].to_i,
                           position: game["playerPositionCode"],
                           team: game["teamAbbrev"],
                           opposition: game["opponentTeamAbbrev"],
-                          game_date: game["gameDate"].to_date,
+                          game_date: (game["gameDate"].to_datetime - 10.hours),
                           game_id: game["gameId"].to_i,
                           goals: game["goals"],
                           assists: game["assists"],

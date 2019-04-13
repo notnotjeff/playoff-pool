@@ -5,6 +5,10 @@ class Skater < ApplicationRecord
   require 'open-uri'
   validates :id, uniqueness: true
 
+  def full_name
+    "#{first_name} #{last_name}"
+  end
+
   def self.scrape_skaters
     year_range = Time.now.last_year.strftime('%Y') + Time.now.strftime('%Y')
     url = "http://www.nhl.com/stats/rest/skaters?isAggregate=false&reportType=basic&isGame=false&reportName=skatersummary&cayenneExp=gameTypeId=3%20and%20seasonId%3E=#{year_range}%20and%20seasonId%3C=#{year_range}"

@@ -12,7 +12,7 @@ Rails.application.routes.draw do
 
   resources :leagues do
     member do
-      get :skaters, :goalies, :rules
+      get :skaters, :goalies, :rules, :active_players
     end
   end
   resources :general_managers, only: %i[destroy update create]

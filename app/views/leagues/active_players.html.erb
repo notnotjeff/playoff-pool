@@ -1,0 +1,68 @@
+<% provide(:title, "#{@league.name} Active Players") %>
+<h1><%= @league.name %> Active Players</h1>
+<%= link_to "Back to League", @league, class: 'btn btn-success btn-sm btn-custom' %>
+<br><br>
+
+<section>
+  <h3>Skaters</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Rank</th>
+        <th>Skater</th>
+        <th>Team</th>
+        <th>G</th>
+        <th>A</th>
+        <th>P</th>
+        <th>OTG</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% i = 1 %>
+      <% @skaters.each do |skater| %>
+        <tr>
+          <td><%= i %></td>
+          <td><%= skater.full_name %></td>
+          <td><%= skater.team %></td>
+          <td><%= skater.goals %></td>
+          <td><%= skater.assists %></td>
+          <td><%= skater.points %></td>
+          <td><%= skater.ot_goals %></td>
+          <td><%= skater.value %></td>
+        </tr>
+        <% i += 1 %>
+      <% end %>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h3>Goalies</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Rank</th>
+        <th>Name</th>
+        <th>Team</th>
+        <th>W</th>
+        <th>SO</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% i = 1 %>
+      <% @goalies.each do |goalie| %>
+        <tr>
+          <td><%= i %></td>
+          <td><%= goalie.full_name %></td>
+          <td><%= goalie.team %></td>
+          <td><%= goalie.win %></td>
+          <td><%= goalie.shutout %></td>
+          <td><%= goalie.value %></td>
+        </tr>
+        <% i += 1 %>
+      <% end %>
+    </tbody>
+  </table>
+</section>

@@ -1,0 +1,28 @@
+<table>
+  <thead>
+    <tr>
+      <th>Player</th>
+      <th>G</th>
+      <th>A</th>
+      <th>P</th>
+      <th>OTG</th>
+      <th>Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @defensemen.each do |d| %>
+      <tr>
+        <td>
+          <span class='<%= 'active-player' if d.playing %>'><%= d.player.full_name %></span>
+          <%= link_to "X", roster_player_path(@gm.roster_players.find_by(player_id: d.player.id, round: round)), method: :delete if current_user == @gm.user && Round.lineup_round == round %>
+        </td>
+        <td><%= d.player.statline["r#{round}_goals".to_sym] %></td>
+        <td><%= d.player.statline["r#{round}_assists".to_sym] %></td>
+        <td><%= d.player.statline["r#{round}_points".to_sym] %></td>
+        <td><%= d.player.statline["r#{round}_ot_goals".to_sym] %></td>
+        <td><%= d.player.statline["r#{round}_total".to_sym] %></td>
+        <td></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -42,16 +42,16 @@ class LeaguesController < ApplicationController
     @position, @def_position = set_position(params[:position].to_s)
     @league = League.find(params[:id].to_i)
 
-    if @round.to_i.between?(1,4)
+    if @round.to_i.between?(1, 4)
       @skaters = RosterPlayer.where(league_id: @league, round: @round, position: @position)
-                              .select("DISTINCT ON (roster_players.player_id, roster_players.round_total) * ")
-                              .group("roster_players.player_id, roster_players.id, roster_players.round_total")
-                              .order("roster_players.round_total desc")
+                             .select('DISTINCT ON (roster_players.player_id, roster_players.round_total) * ')
+                             .group('roster_players.player_id, roster_players.id, roster_players.round_total')
+                             .order('roster_players.round_total desc')
     else
       @skaters = RosterPlayer.where(league_id: @league, position: @position)
-                              .select("DISTINCT ON (roster_players.player_id, roster_players.round_total, roster_players.round) * ")
-                              .group("roster_players.player_id, roster_players.id, roster_players.round_total, roster_players.round")
-                              .order("roster_players.round_total desc")
+                             .select('DISTINCT ON (roster_players.player_id, roster_players.round_total, roster_players.round) * ')
+                             .group('roster_players.player_id, roster_players.id, roster_players.round_total, roster_players.round')
+                             .order('roster_players.round_total desc')
     end
   end
 
@@ -61,15 +61,27 @@ class LeaguesController < ApplicationController
 
     if @round.to_i.between?(1,4)
       @goalies = RosterPlayer.where(league_id: @league, round: @round, position: "G")
-                              .select("DISTINCT ON (roster_players.player_id, roster_players.round_total) * ")
-                              .group("roster_players.player_id, roster_players.id, roster_players.round_total")
-                              .order("roster_players.round_total desc")
+                             .select("DISTINCT ON (roster_players.player_id, roster_players.round_total) * ")
+                             .group("roster_players.player_id, roster_players.id, roster_players.round_total")
+                             .order("roster_players.round_total desc")
     else
       @goalies = RosterPlayer.where(league_id: @league, position: "G")
-                              .select("DISTINCT ON (roster_players.player_id, roster_players.round_total, roster_players.round) * ")
-                              .group("roster_players.player_id, roster_players.id, roster_players.round_total, roster_players.round")
-                              .order("roster_players.round_total desc")
+                             .select("DISTINCT ON (roster_players.player_id, roster_players.round_total, roster_players.round) * ")
+                             .group("roster_players.player_id, roster_players.id, roster_players.round_total, roster_players.round")
+                             .order("roster_players.round_total desc")
     end
+  end
+
+  def active_players
+    @league = League.find(params[:id].to_i)
+    @skaters = SkaterGameStatline.where(game_date: (Time.now - 12.hours).strftime('%Y-%m-%d'), skater_id: @league.skaters)
+                                 .select("skater_game_statlines.*, CONCAT(skaters.first_name, ' ', skaters.last_name) AS full_name, skater_game_statlines.points + skater_game_statlines.ot_goals AS value")
+                                 .order('value DESC')
+                                 .joins(:skater)
+    @goalies = GoalieGameStatline.where(game_date: (Time.now - 12.hours).strftime('%Y-%m-%d'), skater_id: @league.goalies)
+                                 .select("goalie_game_statlines.*, CONCAT(goalies.first_name, ' ', goalies.last_name) AS full_name, goalie_game_statlines.win + goalie_game_statlines.shutout AS value")
+                                 .order('value DESC')
+                                 .joins(:goalie)
   end
 
   def rules

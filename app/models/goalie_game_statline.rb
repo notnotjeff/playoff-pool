@@ -59,12 +59,11 @@ class GoalieGameStatline < ApplicationRecord
                           position: game["playerPositionCode"],
                           team: game["teamAbbrev"],
                           opposition: game["opponentTeamAbbrev"],
-                          game_date: game["gameDate"].to_date,
+                          game_date: (game["gameDate"].to_datetime - 10.hours),
                           game_id: game["gameId"].to_i,
                           win: game["wins"],
                           shutout: game["shutouts"],
-                          round: round_number
-                        )
+                          round: round_number)
     ggs.goalie.update_statline
     ggs.save
   end

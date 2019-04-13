@@ -143,6 +143,10 @@ section {
   padding: 0 40px;
 }
 
+.active-player {
+  color: green;
+}
+
 @media only screen and (max-width: 1150px) {
   .form-container {
     flex-direction: column;
