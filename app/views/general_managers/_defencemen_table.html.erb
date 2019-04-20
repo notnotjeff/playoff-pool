@@ -10,17 +10,17 @@
     </tr>
   </thead>
   <tbody>
-    <% @defensemen.each do |d| %>
+    <% @defensemen.where(round: round).each do |d| %>
       <tr>
         <td>
-          <span class='<%= 'active-player' if d.playing %>'><%= d.player.full_name %></span>
-          <%= link_to "X", roster_player_path(@gm.roster_players.find_by(player_id: d.player.id, round: round)), method: :delete if current_user == @gm.user && Round.lineup_round == round %>
+          <span class='<%= 'active-player' if d.playing %>'><%= "#{d.first_name} #{d.last_name}" %></span>
+          <%= link_to "X", roster_player_path(d.id), method: :delete if current_user == @gm.user && @lineup_round == round %>
         </td>
-        <td><%= d.player.statline["r#{round}_goals".to_sym] %></td>
-        <td><%= d.player.statline["r#{round}_assists".to_sym] %></td>
-        <td><%= d.player.statline["r#{round}_points".to_sym] %></td>
-        <td><%= d.player.statline["r#{round}_ot_goals".to_sym] %></td>
-        <td><%= d.player.statline["r#{round}_total".to_sym] %></td>
+        <td><%= d["r#{round}_goals".to_sym] %></td>
+        <td><%= d["r#{round}_assists".to_sym] %></td>
+        <td><%= d["r#{round}_points".to_sym] %></td>
+        <td><%= d["r#{round}_ot_goals".to_sym] %></td>
+        <td><%= d["r#{round}_total".to_sym] %></td>
         <td></td>
       </tr>
     <% end %>

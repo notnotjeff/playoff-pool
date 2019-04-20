@@ -28,26 +28,30 @@ class GeneralManagersController < ApplicationController
 
     @forwards = @gm.roster_players.where(position: 'F')
                    .joins("LEFT JOIN skater_game_statlines sgs ON sgs.skater_id = roster_players.player_id AND sgs.game_date = '#{(Time.now - 12.hours).strftime('%Y-%m-%d')}'")
-                   .select('roster_players.*, CASE WHEN sgs.id > 0 THEN true ELSE false END AS playing, sgs.round AS round')
+                   .joins('LEFT JOIN skaters ON skaters.id = roster_players.player_id')
+                   .select('roster_players.*, CASE WHEN sgs.id > 0 THEN true ELSE false END AS playing, sgs.round AS round, skaters.*')
                    .order(round_total: :desc)
     @defensemen = @gm.roster_players.where(position: 'D')
                      .joins("LEFT JOIN skater_game_statlines sgs ON sgs.skater_id = roster_players.player_id AND sgs.game_date = '#{(Time.now - 12.hours).strftime('%Y-%m-%d')}'")
-                     .select('roster_players.*, CASE WHEN sgs.id > 0 THEN true ELSE false END AS playing, sgs.round AS round')
+                     .joins('LEFT JOIN skaters ON skaters.id = roster_players.player_id')
+                     .select('roster_players.*, CASE WHEN sgs.id > 0 THEN true ELSE false END AS playing, sgs.round AS round, skaters.*')
                      .order(round_total: :desc)
     @goalies = @gm.roster_players
                   .where(position: 'G')
                   .joins("LEFT JOIN goalie_game_statlines ggs ON ggs.skater_id = roster_players.player_id AND ggs.game_date = '#{(Time.now - 12.hours).strftime('%Y-%m-%d')}'")
-                  .select('roster_players.*, CASE WHEN ggs.id > 0 THEN true ELSE false END AS playing, ggs.round AS round')
+                  .joins('LEFT JOIN goalies ON goalies.id = roster_players.player_id')
+                  .select('roster_players.*, CASE WHEN ggs.id > 0 THEN true ELSE false END AS playing, ggs.round AS round, goalies.*')
                   .order(round_total: :desc)
 
-    @r1 = @r2 = @r3 = @r4 = ""
-    round = params[:round_number].nil? ? Round.current_round : params[:round_number].to_i
+    @r1 = @r2 = @r3 = @r4 = ''
+    @round = params[:round_number].nil? ? Round.current_round : params[:round_number].to_i
+    @lineup_round = Round.lineup_round
 
-    if round == 4
+    if @round == 4
       @r4 = "active"
-    elsif round == 2
+    elsif @round == 2
       @r2 = "active"
-    elsif round == 3
+    elsif @round == 3
       @r3 = "active"
     else
       @r1 = "active"
