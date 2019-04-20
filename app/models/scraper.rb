@@ -15,8 +15,8 @@ class Scraper < ApplicationRecord
       game_url = "https://statsapi.web.nhl.com/api/v1/game/#{game}/feed/live"
       game_doc = JSON.parse(Nokogiri::HTML(open(game_url)))
       status = game_doc["gameData"]["status"]["abstractGameState"]
-      home_team = game_doc["liveData"]["boxscore"]["teams"]["away"]["team"]["abbreviation"]
-      away_team = game_doc["liveData"]["boxscore"]["teams"]["home"]["team"]["abbreviation"]
+      home_team = game_doc["liveData"]["boxscore"]["teams"]["home"]["team"]["abbreviation"]
+      away_team = game_doc["liveData"]["boxscore"]["teams"]["away"]["team"]["abbreviation"]
       round = round_hash[home_team.to_sym][away_team.to_sym]
 
       if status != 'Final'
