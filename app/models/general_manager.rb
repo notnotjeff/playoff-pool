@@ -8,13 +8,12 @@ class GeneralManager < ApplicationRecord
   validates :name, length: { maximum: 25 }
   before_create :not_started?
 
-  def player_pool
-    round_lineup = Round.lineup_round
+  def player_pool(round)
     remaining_teams = Round.get_rounds_hash
-                           .select { |_t, o| o.length >= round_lineup }
+                           .select { |_t, o| o.length == round }
                            .map { |t| t[0].to_s }
 
-    playing_teams = SkaterGameStatline.where(round: round_lineup).pluck(:team)
+    playing_teams = SkaterGameStatline.where(round: round).pluck(:team)
 
     player_ids = Player.where('team IN (?) OR id IN (?)', playing_teams, roster_players.pluck(:player_id)).pluck(:id)
 
@@ -24,9 +23,9 @@ class GeneralManager < ApplicationRecord
   end
 
   def admin_player_pool
-    round_lineup = Round.lineup_round
+    current_round = Round.current_round
     remaining_teams = Round.get_rounds_hash
-                           .select { |_t, o| o.length >= round_lineup }
+                           .select { |_t, o| o.length >= current_round }
                            .map { |t| t[0].to_s }
 
     player_ids = Player.where(id: roster_players.pluck(:player_id)).pluck(:id)

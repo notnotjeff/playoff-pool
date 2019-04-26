@@ -44,7 +44,8 @@ class GeneralManagersController < ApplicationController
                   .order(round_total: :desc)
 
     @r1 = @r2 = @r3 = @r4 = ''
-    @round = params[:round_number].nil? ? Round.current_round : params[:round_number].to_i
+    @current_round = Round.current_round
+    @round = params[:round_number].nil? ? @current_round : params[:round_number].to_i
     @lineup_round = Round.lineup_round
 
     if @round == 4
