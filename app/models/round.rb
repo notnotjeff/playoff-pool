@@ -11,27 +11,23 @@ class Round < ApplicationRecord
   def self.current_round
     r = Round.find_by(current_round: true)
 
-    if !r
-      return 0
-    else
-      return r.round_number
-    end
+    return 0 unless r
+
+    r.round_number
   end
 
   def self.round_finished?(r)
     round = Round.find_by(round_number: r)
-    if round && round.round_finished == true
-      return true
-    else
-      return false
-    end
+    return true if round && round.round_finished == true
+
+    false
   end
 
   def self.lineup_round
     r = Round.find_by(lineup_changes_allowed: true)
     return r.round_number if r
 
-    return false
+    false
   end
 
   def self.change_round(round)
@@ -68,6 +64,8 @@ class Round < ApplicationRecord
   end
 
   def self.set_round
+    Round.set_rounds_hash
+
     rounds = Round.get_rounds_hash
     round_count = 0
     current_round = 1
@@ -91,7 +89,7 @@ class Round < ApplicationRecord
 
     Round.open_lineups(current_round + 1)
 
-    return "Round has not changed, it is still round #{current_round}"
+    "Round has not changed, it is still round #{current_round}"
   end
 
   def self.reset_league_rounds
@@ -120,6 +118,10 @@ class Round < ApplicationRecord
   end
 
   def self.get_rounds_hash
+    Rails.cache.fetch('rounds_hash') { Round.set_rounds_hash }
+  end
+
+  def self.set_rounds_hash
     season_range = Time.now.last_year.strftime('%Y') + Time.now.strftime('%Y')
     url = "https://statsapi.web.nhl.com/api/v1/tournaments/playoffs?site=en_nhl&expand=round.series,schedule.game.seriesSummary&season=#{season_range}"
     doc = JSON.parse(Nokogiri::HTML(open(url)))
@@ -140,7 +142,7 @@ class Round < ApplicationRecord
       end
     end
 
-    return rounds
+    rounds
   end
 
   def self.rounds_for_option
