@@ -9,7 +9,6 @@ class RosterPlayer < ApplicationRecord
 
   validates :player_id, uniqueness: { scope: %i[round general_manager] }
   before_save :roster_space?
-  before_save :played_in_round?
   before_save :lineup_open
   before_save :update_stats
 
@@ -72,11 +71,6 @@ class RosterPlayer < ApplicationRecord
     else
       throw :abort if gm.roster_players.where(round: round, position: 'F').count >= league["r#{round}_fw_count".to_sym]
     end
-  end
-
-  def played_in_round?
-    throw :abort if position == 'G' && GoalieGameStatline.where('round <= ?', Round.current_round).any?
-    throw :abort if position != 'G' && SkaterGameStatline.where('round <= ?', Round.current_round).any?
   end
 
   def lineup_open

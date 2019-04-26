@@ -3,6 +3,8 @@
 class RosterPlayersController < ApplicationController
   protect_from_forgery
   before_action :authenticate_user!
+  before_action :owner?
+  before_action :played_in_round?, only: %i[create]
 
   def create
     gm = GeneralManager.find(params[:general_manager_id])
@@ -36,5 +38,25 @@ class RosterPlayersController < ApplicationController
     end
 
     redirect_to user_general_manager_path(gm.user_id, gm, round_number: round)
+  end
+
+  private
+
+  def owner?
+    return if current_user == League.find(params[:league_id]).user
+
+    return if current_user == GeneralManager.find(params[:general_manager_id]).user
+
+    redirect_to root_path
+  end
+
+  def played_in_round?
+    return if current_user == League.find(params[:league_id]).user # Admin can add players even after they have started playing
+
+    player = Player.find(params[:roster_player][:player_id])
+    redirect_to root_path if player.nil?
+
+    redirect_to root_path if player.position == 'G' && GoalieGameStatline.where('round <= ?', Round.current_round).any?
+    redirect_to root_path if player.position != 'G' && SkaterGameStatline.where('round <= ?', Round.current_round).any?
   end
 end

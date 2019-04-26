@@ -12,7 +12,7 @@
       <tr>
         <td>
           <span class='<%= 'active-player' if g.playing %>'><%= "#{g.first_name} #{g.last_name}" %></span>
-          <%= link_to "X", roster_player_path(g.id), method: :delete if current_user == @gm.user && @lineup_round == round %>
+          <%= link_to "X", roster_player_path(g.roster_id), method: :delete if current_user == @gm.user && @lineup_round == round %>
         </td>
         <td><%= g["r#{round}_wins".to_sym] %></td>
         <td><%= g["r#{round}_shutouts".to_sym] %></td>

@@ -29,18 +29,18 @@ class GeneralManagersController < ApplicationController
     @forwards = @gm.roster_players.where(position: 'F')
                    .joins("LEFT JOIN skater_game_statlines sgs ON sgs.skater_id = roster_players.player_id AND sgs.game_date = '#{(Time.now - 12.hours).strftime('%Y-%m-%d')}'")
                    .joins('LEFT JOIN skaters ON skaters.id = roster_players.player_id')
-                   .select('roster_players.*, CASE WHEN sgs.id > 0 THEN true ELSE false END AS playing, sgs.round AS round, skaters.*')
+                   .select('roster_players.*, roster_players.id AS roster_id, CASE WHEN sgs.id > 0 THEN true ELSE false END AS playing, sgs.round AS round, skaters.*')
                    .order(round_total: :desc)
     @defensemen = @gm.roster_players.where(position: 'D')
                      .joins("LEFT JOIN skater_game_statlines sgs ON sgs.skater_id = roster_players.player_id AND sgs.game_date = '#{(Time.now - 12.hours).strftime('%Y-%m-%d')}'")
                      .joins('LEFT JOIN skaters ON skaters.id = roster_players.player_id')
-                     .select('roster_players.*, CASE WHEN sgs.id > 0 THEN true ELSE false END AS playing, sgs.round AS round, skaters.*')
+                     .select('roster_players.*, roster_players.id AS roster_id, CASE WHEN sgs.id > 0 THEN true ELSE false END AS playing, sgs.round AS round, skaters.*')
                      .order(round_total: :desc)
     @goalies = @gm.roster_players
                   .where(position: 'G')
                   .joins("LEFT JOIN goalie_game_statlines ggs ON ggs.skater_id = roster_players.player_id AND ggs.game_date = '#{(Time.now - 12.hours).strftime('%Y-%m-%d')}'")
                   .joins('LEFT JOIN goalies ON goalies.id = roster_players.player_id')
-                  .select('roster_players.*, CASE WHEN ggs.id > 0 THEN true ELSE false END AS playing, ggs.round AS round, goalies.*')
+                  .select('roster_players.*, roster_players.id AS roster_id, CASE WHEN ggs.id > 0 THEN true ELSE false END AS playing, ggs.round AS round, goalies.*')
                   .order(round_total: :desc)
 
     @r1 = @r2 = @r3 = @r4 = ''
