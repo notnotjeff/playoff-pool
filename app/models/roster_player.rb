@@ -5,9 +5,11 @@ require 'csv'
 class RosterPlayer < ApplicationRecord
   belongs_to :general_manager
   belongs_to :player
+  has_many :skater_game_statlines, primary_key: :player_id, foreign_key: :skater_id
 
   validates :player_id, uniqueness: { scope: %i[round general_manager] }
-  before_save :has_roster_space
+  before_save :roster_space?
+  before_save :played_in_round?
   before_save :lineup_open
   before_save :update_stats
 
@@ -57,7 +59,7 @@ class RosterPlayer < ApplicationRecord
 
   private
 
-  def has_roster_space
+  def roster_space?
     player = Player.find(player_id)
     gm = GeneralManager.find(general_manager_id)
     league = League.find(league_id)
@@ -70,6 +72,11 @@ class RosterPlayer < ApplicationRecord
     else
       throw :abort if gm.roster_players.where(round: round, position: 'F').count >= league["r#{round}_fw_count".to_sym]
     end
+  end
+
+  def played_in_round?
+    throw :abort if position == 'G' && GoalieGameStatline.where('round <= ?', Round.current_round).any?
+    throw :abort if position != 'G' && SkaterGameStatline.where('round <= ?', Round.current_round).any?
   end
 
   def lineup_open

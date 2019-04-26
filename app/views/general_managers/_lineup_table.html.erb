@@ -1,6 +1,10 @@
 <% if current_user && (@gm.user_id == current_user.id && @lineup_round == @round) && @gm.player_pool.count > 0 %>
   <section>
-    <%= render 'add_skater_form', round: round %>
+    <%= render 'add_skater_form', round: round, players: @gm.player_pool %>
+  </section>
+<% elsif current_user == @league.user && round == @round && @gm.admin_player_pool.count > 0 %>
+  <section>
+    <%= render 'add_skater_form', round: round, players: @gm.admin_player_pool %>
   </section>
 <% end %>
 
