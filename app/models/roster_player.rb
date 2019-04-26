@@ -9,7 +9,7 @@ class RosterPlayer < ApplicationRecord
 
   validates :player_id, uniqueness: { scope: %i[round general_manager] }
   before_save :roster_space?
-  before_save :lineup_open
+  before_save :lineup_open?
   before_save :update_stats
 
   def self.import(file, round, gm)
@@ -73,8 +73,8 @@ class RosterPlayer < ApplicationRecord
     end
   end
 
-  def lineup_open
-    throw :abort if Round.lineup_round == false || Round.lineup_round != round
+  def lineup_open?
+    throw :abort if Round.lineup_round == false || (Round.lineup_round != round && Round.current_round != round)
   end
 
   def update_stats

@@ -1,4 +1,3 @@
-<% p (@current_round == round || @lineup_round == round), @gm.player_pool(round).any? %>
 <% if current_user && (@current_round == round || @lineup_round == round) && @gm.player_pool(round).any? %>
   <section>
     <%= render 'add_skater_form', round: round, players: @gm.player_pool(round) %>
