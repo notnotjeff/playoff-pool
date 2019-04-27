@@ -2,6 +2,7 @@
 <div class="page-heading">
   <h1><%= @league.name %> // Rules</h1>
   <div class="league-links">
+    <%= link_to "Destroy League", @league, method: :delete, data: { confirm: "Are you sure? This is not reversible" }, class: 'btn btn-success btn-sm btn-custom' if current_user == @league.user %>
     <%= link_to "Back to League", @league, class: 'btn btn-success btn-sm btn-custom' %>
   </div>
 </div>
