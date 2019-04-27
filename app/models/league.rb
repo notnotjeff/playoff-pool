@@ -7,11 +7,11 @@ class League < ApplicationRecord
   before_create :playoffs_started?
 
   def skaters
-    general_managers.joins(:roster_players).select('roster_players.player_id AS id').where("roster_players.position != 'G'")
+    general_managers.joins(:roster_players).select('roster_players.player_id AS id, roster_players.round AS round').where("roster_players.position != 'G'")
   end
 
   def goalies
-    general_managers.joins(:roster_players).select('roster_players.player_id AS id').where("roster_players.position = 'G'")
+    general_managers.joins(:roster_players).select('roster_players.player_id AS id, roster_players.round AS round').where("roster_players.position = 'G'")
   end
 
   def teams

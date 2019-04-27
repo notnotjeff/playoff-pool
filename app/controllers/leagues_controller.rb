@@ -96,7 +96,8 @@ class LeaguesController < ApplicationController
 
   def active_players
     @league = League.find(params[:id].to_i)
-    @skaters = SkaterGameStatline.where(game_date: (Time.now - 12.hours).strftime('%Y-%m-%d'), skater_id: @league.skaters)
+    round_player_ids = RosterPlayer.where(league_id: @league.id, round: Round.current_round).where.not(position: 'G').pluck(:player_id)
+    @skaters = SkaterGameStatline.where(game_date: (Time.now - 12.hours).strftime('%Y-%m-%d'), skater_id: round_player_ids)
                                  .select("skater_game_statlines.*, CONCAT(skaters.first_name, ' ', skaters.last_name) AS full_name")
                                  .order('points DESC')
                                  .joins(:skater)
