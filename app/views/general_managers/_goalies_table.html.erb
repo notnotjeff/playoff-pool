@@ -11,7 +11,7 @@
     <% @goalies.where(round: round).each do |g| %>
       <tr>
         <td>
-          <span class='<%= 'active-player' if g.playing %>'><%= "#{g.first_name} #{g.last_name}" %></span>
+          <span class='<%= 'active-player' if g.playing && round == @current_round %>'><%= "#{g.first_name} #{g.last_name}" %></span>
           <%= link_to "X", roster_player_path(g.roster_id), method: :delete if current_user == @gm.user && @lineup_round == round %>
         </td>
         <td><%= g["r#{round}_wins".to_sym] %></td>
