@@ -9,15 +9,27 @@
   </thead>
   <tbody>
     <% @goalies.where(round: round).each do |g| %>
-      <tr>
-        <td>
-          <span class='<%= 'active-player' if g.playing && round == @current_round %>'><%= "#{g.first_name} #{g.last_name}" %></span>
-          <%= link_to "X", roster_player_path(g.roster_id, league_id: @league.id, general_manager_id: @gm.id), method: :delete if (current_user == @gm.user && g.not_played?) || current_user == @league.user %>
-        </td>
-        <td><%= g["r#{round}_wins".to_sym] %></td>
-        <td><%= g["r#{round}_shutouts".to_sym] %></td>
-        <td><%= g["r#{round}_total".to_sym] %></td>
-      </tr>
+      <% if g.not_played? && (current_user != @league.user && current_user != @gm.user) %>
+        <tr>
+          <td>XXXXXXXXXX</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      <% else %>
+        <tr>
+          <td>
+            <span class='<%= 'active-player' if g.playing && round == @current_round %>'><%= "#{g.first_name} #{g.last_name}" %></span>
+            <%= link_to "X", roster_player_path(g.roster_id, league_id: @league.id, general_manager_id: @gm.id), method: :delete if (current_user == @gm.user && g.not_played?) || current_user == @league.user %>
+          </td>
+          <td><%= g["r#{round}_wins".to_sym] %></td>
+          <td><%= g["r#{round}_shutouts".to_sym] %></td>
+          <td><%= g["r#{round}_total".to_sym] %></td>
+        </tr>
+      <% end %>
     <% end %>
   </tbody>
 </table>

@@ -11,18 +11,30 @@
   </thead>
   <tbody>
     <% @defensemen.where(round: round).each do |d| %>
-      <tr>
-        <td>
-          <span class='<%= 'active-player' if d.playing && round == @current_round %>'><%= "#{d.first_name} #{d.last_name}" %></span>
-          <%= link_to "X", roster_player_path(d.roster_id, league_id: @league.id, general_manager_id: @gm.id), method: :delete if (current_user == @gm.user && d.not_played?) || current_user == @league.user %>
-        </td>
-        <td><%= d["r#{round}_goals".to_sym] %></td>
-        <td><%= d["r#{round}_assists".to_sym] %></td>
-        <td><%= d["r#{round}_points".to_sym] %></td>
-        <td><%= d["r#{round}_ot_goals".to_sym] %></td>
-        <td><%= d["r#{round}_total".to_sym] %></td>
-        <td></td>
-      </tr>
+      <% if d.not_played? && (current_user != @league.user && current_user != @gm.user) %>
+        <tr>
+          <td>XXXXXXXXXX</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      <% else %>
+        <tr>
+          <td>
+            <span class='<%= 'active-player' if d.playing && round == @current_round %>'><%= "#{d.first_name} #{d.last_name}" %></span>
+            <%= link_to "X", roster_player_path(d.roster_id, league_id: @league.id, general_manager_id: @gm.id), method: :delete if (current_user == @gm.user && d.not_played?) || current_user == @league.user %>
+          </td>
+          <td><%= d["r#{round}_goals".to_sym] %></td>
+          <td><%= d["r#{round}_assists".to_sym] %></td>
+          <td><%= d["r#{round}_points".to_sym] %></td>
+          <td><%= d["r#{round}_ot_goals".to_sym] %></td>
+          <td><%= d["r#{round}_total".to_sym] %></td>
+          <td></td>
+        </tr>
+      <% end %>
     <% end %>
   </tbody>
 </table>
