@@ -56,7 +56,7 @@ class RosterPlayersController < ApplicationController
     player = Player.find(params[:roster_player][:player_id])
     redirect_to root_path if player.nil?
 
-    redirect_to root_path if player.position == 'G' && GoalieGameStatline.where('round <= ?', Round.current_round).any?
-    redirect_to root_path if player.position != 'G' && SkaterGameStatline.where('round <= ?', Round.current_round).any?
+    starting_times = Rails.cache.fetch('series_start_times_hash') { Round.scrape_series_start_times }
+    redirect_to root_path if starting_times[player.team.to_sym][params[:round_number].to_i][:start_time] == true
   end
 end

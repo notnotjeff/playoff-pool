@@ -29,18 +29,18 @@ class GeneralManagersController < ApplicationController
     @forwards = @gm.roster_players.where(position: 'F')
                    .joins("LEFT JOIN skater_game_statlines sgs ON sgs.skater_id = roster_players.player_id AND sgs.game_date = '#{(Time.now - 12.hours).strftime('%Y-%m-%d')}'")
                    .joins('LEFT JOIN skaters ON skaters.id = roster_players.player_id')
-                   .select('roster_players.*, roster_players.id AS roster_id, CASE WHEN sgs.id > 0 THEN true ELSE false END AS playing, sgs.round AS round, skaters.*')
+                   .select('roster_players.*, roster_players.round AS round, roster_players.id AS roster_id, CASE WHEN sgs.id > 0 THEN true ELSE false END AS playing, sgs.round AS round_number, skaters.*')
                    .order(round_total: :desc)
     @defensemen = @gm.roster_players.where(position: 'D')
                      .joins("LEFT JOIN skater_game_statlines sgs ON sgs.skater_id = roster_players.player_id AND sgs.game_date = '#{(Time.now - 12.hours).strftime('%Y-%m-%d')}'")
                      .joins('LEFT JOIN skaters ON skaters.id = roster_players.player_id')
-                     .select('roster_players.*, roster_players.id AS roster_id, CASE WHEN sgs.id > 0 THEN true ELSE false END AS playing, sgs.round AS round, skaters.*')
+                     .select('roster_players.*, roster_players.round AS round, roster_players.id AS roster_id, CASE WHEN sgs.id > 0 THEN true ELSE false END AS playing, sgs.round AS round_number, skaters.*')
                      .order(round_total: :desc)
     @goalies = @gm.roster_players
                   .where(position: 'G')
                   .joins("LEFT JOIN goalie_game_statlines ggs ON ggs.skater_id = roster_players.player_id AND ggs.game_date = '#{(Time.now - 12.hours).strftime('%Y-%m-%d')}'")
                   .joins('LEFT JOIN goalies ON goalies.id = roster_players.player_id')
-                  .select('roster_players.*, roster_players.id AS roster_id, CASE WHEN ggs.id > 0 THEN true ELSE false END AS playing, ggs.round AS round, goalies.*')
+                  .select('roster_players.*, roster_players.round AS round, roster_players.id AS roster_id, CASE WHEN ggs.id > 0 THEN true ELSE false END AS playing, ggs.round AS round_number, goalies.*')
                   .order(round_total: :desc)
 
     @r1 = @r2 = @r3 = @r4 = ''
@@ -49,13 +49,13 @@ class GeneralManagersController < ApplicationController
     @lineup_round = Round.lineup_round
 
     if @round == 4
-      @r4 = "active"
+      @r4 = 'active'
     elsif @round == 2
-      @r2 = "active"
+      @r2 = 'active'
     elsif @round == 3
-      @r3 = "active"
+      @r3 = 'active'
     else
-      @r1 = "active"
+      @r1 = 'active'
     end
   end
 
@@ -67,7 +67,7 @@ class GeneralManagersController < ApplicationController
     @gm = GeneralManager.find(params[:id])
     @gm.update_attributes(general_manager_params)
     if @gm.save
-      flash[:success] = "Team updated!"
+      flash[:success] = 'Team updated!'
       redirect_to user_general_manager_path(@gm)
     else
       render 'edit'

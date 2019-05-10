@@ -8,6 +8,11 @@ namespace :daily_functions do
     puts message
   end
 
+  desc 'Set hash for series start times to allow lineups to be set up until the last possible second'
+  task set_series_starts: :environment do
+    Round.scrape_series_start_times
+  end
+
   # Have this run overnight to double check old games still have the correct statlines
   desc 'Update games being played or already played on selected date'
   task update_stats: :environment do

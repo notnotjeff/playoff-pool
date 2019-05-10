@@ -9,8 +9,9 @@ class RosterPlayer < ApplicationRecord
 
   validates :player_id, uniqueness: { scope: %i[round general_manager] }
   before_save :roster_space?
-  before_save :lineup_open?
+  before_save :started_round?
   before_save :update_stats
+  before_destroy :started_round?
 
   def self.import(file, round, gm)
     team_abbreviations = Player.distinct.pluck(:team)
@@ -56,6 +57,11 @@ class RosterPlayer < ApplicationRecord
     errors
   end
 
+  def not_played?
+    series_starts = Round.start_time_hash
+    series_starts[team.to_sym][round][:start_time] != true
+  end
+
   private
 
   def roster_space?
@@ -73,8 +79,10 @@ class RosterPlayer < ApplicationRecord
     end
   end
 
-  def lineup_open?
-    throw :abort if Round.lineup_round == false || (Round.lineup_round != round && Round.current_round != round)
+  def started_round?
+    player = Player.find(player_id)
+    start_times = Rails.cache.fetch('series_start_times_hash') { Round.scrape_series_start_times }
+    throw :abort if start_times[player.team.to_sym][round][:start_time] == true
   end
 
   def update_stats

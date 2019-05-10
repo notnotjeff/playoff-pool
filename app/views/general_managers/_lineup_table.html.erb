@@ -1,8 +1,8 @@
-<% if current_user == @gm.user && (@current_round == round || @lineup_round == round) && @gm.player_pool(round).any? %>
+<% if (current_user == @gm.user && current_user != @league.user) && (@current_round == round || @lineup_round == round) && @gm.player_pool(round).any? %>
   <section>
     <%= render 'add_skater_form', round: round, players: @gm.player_pool(round) %>
   </section>
-<% elsif current_user == @league.user && round == @current_round && @gm.admin_player_pool.any? %>
+<% elsif current_user == @league.user && round <= @current_round && @gm.admin_player_pool.any? %>
   <section>
     <%= render 'add_skater_form', round: round, players: @gm.admin_player_pool %>
   </section>

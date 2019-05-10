@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 class Round < ApplicationRecord
   require 'open-uri'
 
   def self.seed_rounds
-    Round.create!(name: "Round 1", round_number: 1, current_round: false, lineup_changes_allowed: true, round_finished: false, start_date: "10-04-2019".to_date, end_date: nil)
-    Round.create!(name: "Round 2", round_number: 2, current_round: false, lineup_changes_allowed: false, round_finished: false, start_date: nil, end_date: nil)
-    Round.create!(name: "Round 3", round_number: 3, current_round: false, lineup_changes_allowed: false, round_finished: false, start_date: nil, end_date: nil)
-    Round.create!(name: "Round 4", round_number: 4, current_round: false, lineup_changes_allowed: false, round_finished: false, start_date: nil, end_date: nil)
+    Round.create!(name: 'Round 1', round_number: 1, current_round: false, lineup_changes_allowed: true, round_finished: false, start_date: '10-04-2019'.to_date, end_date: nil)
+    Round.create!(name: 'Round 2', round_number: 2, current_round: false, lineup_changes_allowed: false, round_finished: false, start_date: nil, end_date: nil)
+    Round.create!(name: 'Round 3', round_number: 3, current_round: false, lineup_changes_allowed: false, round_finished: false, start_date: nil, end_date: nil)
+    Round.create!(name: 'Round 4', round_number: 4, current_round: false, lineup_changes_allowed: false, round_finished: false, start_date: nil, end_date: nil)
   end
 
   def self.current_round
@@ -46,9 +48,7 @@ class Round < ApplicationRecord
       r.save
     end
     GeneralManager.update_round(round)
-    if round < 4
-      Round.open_lineups(round + 1)
-    end
+    Round.open_lineups(round + 1) if round < 4
   end
 
   def self.open_lineups(round)
@@ -71,7 +71,7 @@ class Round < ApplicationRecord
     current_round = 1
 
     rounds.each do |t|
-      round_count += t[1].count unless t[0].to_s.include?("/")
+      round_count += t[1].count unless t[0].to_s.include?('/')
     end
 
     if round_count >= 24 && round_count < 28
@@ -117,6 +117,43 @@ class Round < ApplicationRecord
     end
   end
 
+  def self.scrape_series_start_times
+    Rails.cache.delete('series_start_times_hash')
+    sd = Round.first.start_date.strftime('%Y-%m-%d')
+    ed = Date.today.strftime('%Y-07-01')
+    url = "https://statsapi.web.nhl.com/api/v1/schedule?startDate=#{sd}&endDate=#{ed}&hydrate=team,game(content(media(epg)),seriesSummary)"
+
+    doc = JSON.parse(Nokogiri::HTML(open(url)))
+    Rails.cache.fetch('series_start_times_hash') { create_start_time_hash(doc) }
+  end
+
+  def self.create_start_time_hash(doc)
+    series_starts = {}
+    doc['dates'].each do |date|
+      date['games'].each do |game|
+        next unless game['seriesSummary']['gameNumber'] == 1
+
+        rounds = Round.get_rounds_hash
+        home_abbr = game['teams']['home']['team']['abbreviation'].to_sym
+        away_abbr = game['teams']['away']['team']['abbreviation'].to_sym
+        round = rounds[home_abbr][away_abbr]
+        game_time = game['gameDate'].to_datetime < Time.now.utc ? true : game['gameDate'].to_datetime
+
+        series_starts[home_abbr] ||= {}
+        series_starts[away_abbr] ||= {}
+
+        series_starts[home_abbr][round] = { start_time: game_time }
+        series_starts[away_abbr][round] = { start_time: game_time }
+      end
+    end
+
+    series_starts
+  end
+
+  def self.start_time_hash
+    Rails.cache.fetch('series_start_times_hash') { Round.scrape_series_start_times }
+  end
+
   def self.get_rounds_hash
     Rails.cache.fetch('rounds_hash') { Round.set_rounds_hash }
   end
@@ -127,18 +164,19 @@ class Round < ApplicationRecord
     doc = JSON.parse(Nokogiri::HTML(open(url)))
     rounds = {}
 
-    return {} if doc["rounds"].nil?
+    return {} if doc['rounds'].nil?
 
-    doc["rounds"].each do |round|
-      round_number = round["number"].to_i
-      round["series"].each do |series|
-        next if series["names"]["teamAbbreviationA"] == "" || series["names"]["teamAbbreviationB"] == ""
+    doc['rounds'].each do |round|
+      round_number = round['number'].to_i
+      round['series'].each do |series|
+        next if series['names']['teamAbbreviationA'] == '' || series['names']['teamAbbreviationB'] == ''
+
         # If team doesn't exist in rounds then add it
-        rounds[series["names"]["teamAbbreviationA"].to_sym] ||= {}
-        rounds[series["names"]["teamAbbreviationB"].to_sym] ||= {}
+        rounds[series['names']['teamAbbreviationA'].to_sym] ||= {}
+        rounds[series['names']['teamAbbreviationB'].to_sym] ||= {}
         # Add opponent to rounds hash
-        rounds[series["names"]["teamAbbreviationA"].to_sym][series["names"]["teamAbbreviationB"].to_sym] = round_number
-        rounds[series["names"]["teamAbbreviationB"].to_sym][series["names"]["teamAbbreviationA"].to_sym] = round_number
+        rounds[series['names']['teamAbbreviationA'].to_sym][series['names']['teamAbbreviationB'].to_sym] = round_number
+        rounds[series['names']['teamAbbreviationB'].to_sym][series['names']['teamAbbreviationA'].to_sym] = round_number
       end
     end
 
@@ -146,7 +184,7 @@ class Round < ApplicationRecord
   end
 
   def self.rounds_for_option
-    rounds = [["Any", 0]]
+    rounds = [['Any', 0]]
     (1..Round.current_round).each do |r|
       rounds << ["Round #{r}", r]
     end
