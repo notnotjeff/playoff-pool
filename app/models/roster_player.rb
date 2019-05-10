@@ -59,7 +59,9 @@ class RosterPlayer < ApplicationRecord
 
   def not_played?
     series_starts = Round.start_time_hash
-    series_starts[team.to_sym][round][:start_time] != true
+    return false if series_starts[team.to_sym][round][:start_time] == true || Time.now.utc > series_starts[team.to_sym][round][:start_time]
+
+    true
   end
 
   private

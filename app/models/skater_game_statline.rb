@@ -4,6 +4,13 @@ class SkaterGameStatline < ApplicationRecord
 
   require 'open-uri'
 
+  def not_played?
+    series_starts = Round.start_time_hash
+    return false if series_starts[team.to_sym][round][:start_time] == true || Time.now.utc > series_starts[team.to_sym][round][:start_time]
+
+    true
+  end
+
   def self.scrape_all_games
     rounds = Round.get_rounds_hash
     season_year = Time.now.strftime('%Y')

@@ -21,14 +21,25 @@
     <tbody>
       <% i = 1 %>
       <% @skaters.each do |skater| %>
-        <tr>
-          <td><%= i %></td>
-          <td><%= skater.full_name %></td>
-          <td><%= skater.team %></td>
-          <td><%= skater.goals %></td>
-          <td><%= skater.assists %></td>
-          <td><%= skater.points %></td>
-        </tr>
+        <% if skater.not_played? %>
+          <tr>
+            <td><%= i %></td>
+            <td>XXXXXXXXXX</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        <% else %>
+          <tr>
+            <td><%= i %></td>
+            <td><%= skater.full_name %></td>
+            <td><%= skater.team %></td>
+            <td><%= skater.goals %></td>
+            <td><%= skater.assists %></td>
+            <td><%= skater.points %></td>
+          </tr>
+        <% end %>
         <% i += 1 %>
       <% end %>
     </tbody>
