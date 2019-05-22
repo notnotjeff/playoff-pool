@@ -14,7 +14,7 @@ class GeneralManager < ApplicationRecord
                            .map { |t| t[0].to_s }
 
     starting_times = Rails.cache.fetch('series_start_times_hash') { Round.scrape_series_start_times }
-    playing_teams = remaining_teams.select { |t| p starting_times[t.to_sym][round][:start_time] == true }
+    playing_teams = remaining_teams.select { |t| starting_times[t.to_sym][round].present? && starting_times[t.to_sym][round][:start_time] == true }
 
     player_ids = Player.where('team IN (?) OR id IN (?)', playing_teams, roster_players.pluck(:player_id)).pluck(:id)
 

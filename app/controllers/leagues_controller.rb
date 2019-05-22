@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class LeaguesController < ApplicationController
   protect_from_forgery
 
@@ -81,16 +83,16 @@ class LeaguesController < ApplicationController
     @round = set_round(params[:round].to_s)
     @league = League.find(params[:id].to_i)
 
-    if @round.to_i.between?(1,4)
-      @goalies = RosterPlayer.where(league_id: @league, round: @round, position: "G")
-                             .select("DISTINCT ON (roster_players.player_id, roster_players.round_total) * ")
-                             .group("roster_players.player_id, roster_players.id, roster_players.round_total")
-                             .order("roster_players.round_total desc")
+    if @round.to_i.between?(1, 4)
+      @goalies = RosterPlayer.where(league_id: @league, round: @round, position: 'G')
+                             .select('DISTINCT ON (roster_players.player_id, roster_players.round_total) * ')
+                             .group('roster_players.player_id, roster_players.id, roster_players.round_total')
+                             .order('roster_players.round_total desc')
     else
-      @goalies = RosterPlayer.where(league_id: @league, position: "G")
-                             .select("DISTINCT ON (roster_players.player_id, roster_players.round_total, roster_players.round) * ")
-                             .group("roster_players.player_id, roster_players.id, roster_players.round_total, roster_players.round")
-                             .order("roster_players.round_total desc")
+      @goalies = RosterPlayer.where(league_id: @league, position: 'G')
+                             .select('DISTINCT ON (roster_players.player_id, roster_players.round_total, roster_players.round) * ')
+                             .group('roster_players.player_id, roster_players.id, roster_players.round_total, roster_players.round')
+                             .order('roster_players.round_total desc')
     end
   end
 
@@ -127,6 +129,6 @@ class LeaguesController < ApplicationController
   def set_position(position)
     pos = position == 'F' || position == 'D' ? position : %w[F D]
     def_pos = pos == %w[F D] ? 'Any' : pos
-    return pos, def_pos
+    [pos, def_pos]
   end
 end
