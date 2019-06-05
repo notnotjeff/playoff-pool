@@ -8,10 +8,7 @@ class RosterPlayer < ApplicationRecord
   has_many :skater_game_statlines, primary_key: :player_id, foreign_key: :skater_id
 
   validates :player_id, uniqueness: { scope: %i[round general_manager] }
-  before_save :roster_space?
-  before_save :started_round?
   before_save :update_stats
-  before_destroy :started_round?
 
   def self.import(file, round, gm)
     team_abbreviations = Player.distinct.pluck(:team)
@@ -65,27 +62,6 @@ class RosterPlayer < ApplicationRecord
   end
 
   private
-
-  def roster_space?
-    player = Player.find(player_id)
-    gm = GeneralManager.find(general_manager_id)
-    league = League.find(league_id)
-    round = self.round
-
-    if player.position == 'G'
-      throw :abort if gm.roster_players.where(round: round, position: 'G').count >= league["r#{round}_g_count".to_sym]
-    elsif player.position == 'D'
-      throw :abort if gm.roster_players.where(round: round, position: 'D').count >= league["r#{round}_d_count".to_sym]
-    else
-      throw :abort if gm.roster_players.where(round: round, position: 'F').count >= league["r#{round}_fw_count".to_sym]
-    end
-  end
-
-  def started_round?
-    player = Player.find(player_id)
-    start_times = Rails.cache.fetch('series_start_times_hash') { Round.scrape_series_start_times }
-    throw :abort if start_times[player.team.to_sym][round][:start_time] == true
-  end
 
   def update_stats
     if position == 'G'

@@ -4,7 +4,8 @@ class RosterPlayersController < ApplicationController
   protect_from_forgery
   before_action :authenticate_user!
   before_action :owner?
-  before_action :played_in_round?, only: %i[create]
+  before_action :played_in_round?, only: %i[create destroy]
+  before_action :roster_space?, only: %i[create]
 
   def create
     gm = GeneralManager.find(params[:general_manager_id])
@@ -50,6 +51,12 @@ class RosterPlayersController < ApplicationController
     redirect_to root_path
   end
 
+  def is_open_round?
+    return if current_user == League.find(params[:league_id]).user # Admin can manage players even if it isn't the current round
+
+    redirect_to root_path if params[:round_number].to_i >= Round.current_round && params[:round_number].to_i <= Round.current_round + 1 || params[:round_number].to_i > 4
+  end
+
   def played_in_round?
     return if current_user == League.find(params[:league_id]).user # Admin can add players even after they have started playing
 
@@ -58,5 +65,20 @@ class RosterPlayersController < ApplicationController
 
     starting_times = Rails.cache.fetch('series_start_times_hash') { Round.scrape_series_start_times }
     redirect_to root_path if starting_times[player.team.to_sym][params[:round_number].to_i][:start_time] == true
+  end
+
+  def roster_space?
+    player = Player.find(params[:roster_player][:player_id])
+    gm = GeneralManager.find(params[:general_manager_id])
+    league = League.find(params[:league_id])
+    round = params[:round_number].to_i
+
+    if player.position == 'G'
+      redirect_to root_path if gm.roster_players.where(round: round, position: 'G').count >= league["r#{round}_g_count".to_sym]
+    elsif player.position == 'D'
+      redirect_to root_path if gm.roster_players.where(round: round, position: 'D').count >= league["r#{round}_d_count".to_sym]
+    else
+      redirect_to root_path if gm.roster_players.where(round: round, position: 'F').count >= league["r#{round}_fw_count".to_sym]
+    end
   end
 end

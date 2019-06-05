@@ -5,6 +5,7 @@
       <%= hidden_field_tag :league_id, @gm.league_id %>
       <%= hidden_field_tag :general_manager_id, @gm.id %>
       <%= hidden_field_tag :round_number, round %>
+      <%= hidden_field_tag :current_user, current_user %>
       <%= f.submit "Add Player" %>
     <% end %>
   </div>
